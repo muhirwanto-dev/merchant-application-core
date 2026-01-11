@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <!--  Common  -->
+    <x:Double x:Key="AppLayoutPaddingLarge">50</x:Double>
+    <x:Double x:Key="AppLayoutPadding">20</x:Double>
+    <x:Double x:Key="AppLayoutPaddingDialog">25</x:Double>
+
+    <!--  Font  -->
+    <x:Double x:Key="FontSizeGrow4">47</x:Double>
+    <x:Double x:Key="FontSizeGrow3">36</x:Double>
+    <x:Double x:Key="FontSizeGrow2">27</x:Double>
+    <x:Double x:Key="FontSizeGrow1">21</x:Double>
+    <x:Double x:Key="FontSizeBase">16</x:Double>
+    <x:Double x:Key="FontSizeShrink1">12</x:Double>
+    <x:Double x:Key="FontSizeShrink2">9</x:Double>
+    <x:Double x:Key="FontSizeShrink3">7</x:Double>
+    <x:Double x:Key="FontSizeShrink4">5</x:Double>
+
+    <!--  Button  -->
+    <x:Double x:Key="MinEntryHeightSize">48</x:Double>
+    <x:Double x:Key="MinTouchTargetSize">48</x:Double>
+    <x:Double x:Key="LargeButtonSize">64</x:Double>
+    <x:Double x:Key="MediumButtonSize">48</x:Double>
+    <x:Double x:Key="SmallButtonSize">36</x:Double>
+    <Thickness x:Key="SmallButtonPadding">10, 6</Thickness>
+
+    <!--  Corner radius  -->
+    <x:Single x:Key="CornerRadiusCircle">1000</x:Single>
+    <x:Single x:Key="CornerRadiusExtraLarge">28</x:Single>
+    <x:Single x:Key="CornerRadiusLarge">16</x:Single>
+    <x:Single x:Key="CornerRadiusMedium">12</x:Single>
+    <x:Single x:Key="CornerRadiusSmall">8</x:Single>
+    <x:Single x:Key="CornerRadiusExtraSmall">4</x:Single>
+    <x:Int32 x:Key="CornerRadiusCircleInt">1000</x:Int32>
+    <x:Int32 x:Key="CornerRadiusExtraLargeInt">28</x:Int32>
+    <x:Int32 x:Key="CornerRadiusLargeInt">16</x:Int32>
+    <x:Int32 x:Key="CornerRadiusMediumInt">12</x:Int32>
+    <x:Int32 x:Key="CornerRadiusSmallInt">8</x:Int32>
+    <x:Int32 x:Key="CornerRadiusExtraSmallInt">4</x:Int32>
+
+    <x:Double x:Key="MaterialCornerRadiusCircle">1000</x:Double>
+    <x:Double x:Key="MaterialCornerRadiusExtraLarge">28</x:Double>
+    <x:Double x:Key="MaterialCornerRadiusLarge">16</x:Double>
+    <x:Double x:Key="MaterialCornerRadiusMedium">12</x:Double>
+    <x:Double x:Key="MaterialCornerRadiusSmall">8</x:Double>
+    <x:Double x:Key="MaterialCornerRadiusExtraSmall">4</x:Double>
+
+    <!--  Dialog  -->
+    <x:Double x:Key="DialogCornerRadius">5</x:Double>
+    <x:Double x:Key="DialogMaxWidth">340</x:Double>
+    <x:Double x:Key="DialogMinWidth">250</x:Double>
+
+    <!--  Margin/ Padding  -->
+    <x:Double x:Key="CommonSpaceBetweenLarge">25</x:Double>
+    <x:Double x:Key="CommonSpaceBetweenMedium">15</x:Double>
+    <x:Double x:Key="CommonSpaceBetweenSmall">10</x:Double>
+    <x:Double x:Key="CommonSpaceBetweenMicro">5</x:Double>
+
+    <Thickness x:Key="CommonSpaceLargeAll">25</Thickness>
+    <Thickness x:Key="CommonSpaceLargeLeft">25,0,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceLargeTop">0,25,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceLargeRight">0,0,25,0</Thickness>
+    <Thickness x:Key="CommonSpaceLargeBottom">0,0,0,25</Thickness>
+    <Thickness x:Key="CommonSpaceLargeX">25,0</Thickness>
+    <Thickness x:Key="CommonSpaceLargeY">0,25</Thickness>
+
+    <Thickness x:Key="CommonSpaceMediumAll">15</Thickness>
+    <Thickness x:Key="CommonSpaceMediumLeft">15,0,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceMediumTop">0,15,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceMediumRight">0,0,15,0</Thickness>
+    <Thickness x:Key="CommonSpaceMediumBottom">0,0,0,15</Thickness>
+    <Thickness x:Key="CommonSpaceMediumX">15,0</Thickness>
+    <Thickness x:Key="CommonSpaceMediumY">0,15</Thickness>
+
+    <Thickness x:Key="CommonSpaceSmallAll">10</Thickness>
+    <Thickness x:Key="CommonSpaceSmallLeft">10,0,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceSmallTop">0,10,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceSmallRight">0,0,10,0</Thickness>
+    <Thickness x:Key="CommonSpaceSmallBottom">0,0,0,10</Thickness>
+    <Thickness x:Key="CommonSpaceSmallX">10,0</Thickness>
+    <Thickness x:Key="CommonSpaceSmallY">0,10</Thickness>
+
+    <Thickness x:Key="CommonSpaceMicroAll">5</Thickness>
+    <Thickness x:Key="CommonSpaceMicroLeft">5,0,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceMicroTop">0,5,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceMicroRight">0,0,5,0</Thickness>
+    <Thickness x:Key="CommonSpaceMicroBottom">0,0,0,5</Thickness>
+    <Thickness x:Key="CommonSpaceMicroX">5,0</Thickness>
+    <Thickness x:Key="CommonSpaceMicroY">0,5</Thickness>
+
+    <Thickness x:Key="CommonSpaceNanoAll">2</Thickness>
+    <Thickness x:Key="CommonSpaceNanoLeft">2,0,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceNanoTop">0,2,0,0</Thickness>
+    <Thickness x:Key="CommonSpaceNanoRight">0,0,2,0</Thickness>
+    <Thickness x:Key="CommonSpaceNanoBottom">0,0,0,2</Thickness>
+    <Thickness x:Key="CommonSpaceNanoX">2,0</Thickness>
+    <Thickness x:Key="CommonSpaceNanoY">0,2</Thickness>
+
+    <!--  Icons  -->
+    <x:Double x:Key="IconSizeSmall">24</x:Double>
+    <x:Double x:Key="IconSizeMicro">16</x:Double>
+
+    <!--  InventoryViewModel  -->
+    <x:Double x:Key="InventorySummaryImageSize">72</x:Double>
+    <x:Double x:Key="InventoryDetailImageHeight">300</x:Double>
+
+    <!--  Product  -->
+    <x:Double x:Key="SaleProductImageSize">48</x:Double>
+    <x:Double x:Key="ProductSummaryImageSize">72</x:Double>
+    <x:Double x:Key="ProductDetailImageHeight">300</x:Double>
+    <x:Double x:Key="OrderItemImageSize">81</x:Double>
+
+    <!--  Specific  -->
+    <x:Double x:Key="AutocompleteHeight">52</x:Double>
+    <x:Double x:Key="MenuButtonSize">96</x:Double>
+
+    <Thickness x:Key="ItemDetailBottomMargin">0,0,0,80</Thickness>
+    <Thickness x:Key="CustomNavbarMargin">10,40</Thickness>
+</ResourceDictionary>
