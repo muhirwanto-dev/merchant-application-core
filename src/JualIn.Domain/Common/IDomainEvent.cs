@@ -1,6 +1,4 @@
-﻿using Wolverine;
-
-namespace JualIn.Domain.Common
+﻿namespace JualIn.Domain.Common
 {
-    public interface IDomainEvent : IMessage;
+    public interface IDomainEvent;
 }
