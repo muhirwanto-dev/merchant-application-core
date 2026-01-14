@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Inventories.Views.InventoryFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:inputkit="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
+    xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.Views"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:validations="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels"
+    x:Name="root"
+    Title="{Static strings:AppStrings.InventoryForm_Lbl_PageTitle}"
+    x:DataType="{x:Type vm:InventoryFormViewModel}"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:InventoryFormPage}}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <inputkit:FormView
+            Margin="{StaticResource AppLayoutPadding}"
+            HorizontalOptions="Fill"
+            Spacing="{StaticResource CommonSpaceBetweenSmall}"
+            SubmitCommand="{Binding SaveCommand}">
+            <Border
+                HeightRequest="210"
+                StrokeShape="{RoundRectangle CornerRadius={StaticResource CornerRadiusMediumInt},
+                                             BackgroundColor={AppThemeBinding Light={StaticResource Outline},
+                                                                              Dark={StaticResource DarkOutline}}}"
+                WidthRequest="210">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectImageCommand}" />
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Image
+                        Aspect="AspectFill"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNotNullConverter}}"
+                        Source="{Binding Image, Converter={toolkit:ByteArrayToImageSourceConverter}}" />
+                    <Image
+                        HeightRequest="48"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNullConverter}}"
+                        Source="{FontImageSource FontFamily=MaterialRounded,
+                                                 Glyph={Static icons:MaterialRounded.Add},
+                                                 Color={AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource DarkPrimary}},
+                                                 Size={StaticResource MinTouchTargetSize}}" />
+                    <horus:MaterialIconButton
+                        Margin="{StaticResource CommonSpaceMicroAll}"
+                        HorizontalOptions="End"
+                        IconTintColor="{AppThemeBinding Light={StaticResource White},
+                                                        Dark={StaticResource Black}}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={x:Static icons:MaterialRounded.Delete}}"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNotNullConverter}}" />
+                </Grid>
+            </Border>
+            <horus:MaterialLabel Text="{Binding InventoryId}" />
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_ItemName}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding Name}">
+                <uranium:TextField.Validations>
+                    <validations:RequiredValidation />
+                </uranium:TextField.Validations>
+            </uranium:TextField>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_Sku}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding Sku}">
+                <uranium:TextField.Attachments>
+                    <Button
+                        Padding="{StaticResource SmallButtonPadding}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={Static icons:MaterialRounded.Search},
+                                                      Color={AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                                             Dark={StaticResource DarkOnSurfaceVariant}},
+                                                      Size={StaticResource IconSizeSmall}}"
+                        StyleClass="TextButton" />
+                </uranium:TextField.Attachments>
+            </uranium:TextField>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_Upc}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding Upc}">
+                <uranium:TextField.Attachments>
+                    <Button
+                        Padding="{StaticResource SmallButtonPadding}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={Static icons:MaterialRounded.Mobile_friendly},
+                                                      Color={AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                                             Dark={StaticResource DarkOnSurfaceVariant}},
+                                                      Size={StaticResource IconSizeSmall}}"
+                        StyleClass="TextButton" />
+                </uranium:TextField.Attachments>
+            </uranium:TextField>
+            <uranium:EditorField Title="{Static strings:AppStrings.InventoryForm_Lbl_Description}" Text="{Binding Description}" />
+            <uranium:PickerField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_Category}"
+                AllowClear="False"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Keyboard_arrow_down}}"
+                ItemsSource="{Binding InventoryCategories}"
+                SelectedItem="{Binding Category}">
+                <uranium:PickerField.Attachments>
+                    <Button
+                        Padding="{StaticResource CommonSpaceSmallX}"
+                        Command="{Binding AddCategoryCommand}"
+                        HeightRequest="{StaticResource IconSizeSmall}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={Static icons:MaterialRounded.Add},
+                                                      Color={AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                                             Dark={StaticResource DarkOnSurfaceVariant}},
+                                                      Size={StaticResource IconSizeSmall}}"
+                        StyleClass="TextButton"
+                        Text="{Static strings:AppStrings.InventoryForm_Btn_AddCategory}" />
+                </uranium:PickerField.Attachments>
+            </uranium:PickerField>
+            <!--<uranium:PickerField Title="{Static strings:AppStrings.InventoryForm_Lbl_Supplier}"
+                                 AllowClear="True"
+                                 ItemDisplayBinding="{Binding Name}"
+                                 ItemsSource="{Binding Suppliers}"
+                                 SelectedItem="{Binding SupplierId}" />-->
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_Price}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Sell}}"
+                Text="{Binding UnitPrice}">
+                <uranium:TextField.Validations>
+                    <validations:RequiredValidation />
+                </uranium:TextField.Validations>
+            </uranium:TextField>
+            <Grid ColumnDefinitions="*,auto" ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}">
+                <uranium:TextField
+                    Title="{Static strings:AppStrings.InventoryForm_Lbl_Stock}"
+                    Grid.Column="0"
+                    ClearButtonVisibility="WhileEditing"
+                    HorizontalOptions="Fill"
+                    Text="{Binding Stock}" />
+                <uranium:PickerField
+                    Title="{Static strings:AppStrings.InventoryForm_Lbl_StockUnit}"
+                    Grid.Column="1"
+                    AllowClear="False"
+                    Icon="{FontImageSource FontFamily=MaterialRounded,
+                                           Glyph={Static icons:MaterialRounded.Keyboard_arrow_down}}"
+                    ItemsSource="{Binding StockUnits}"
+                    SelectedItem="{Binding StockUnit}"
+                    WidthRequest="72" />
+            </Grid>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_StockThreshold}"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding StockThreshold}" />
+            <uranium:DatePickerField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_PurchaseDate}"
+                AllowClear="False"
+                Date="{Binding PurchaseDate}"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Calendar_month}}" />
+            <uranium:DatePickerField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_LastStockUpdate}"
+                AllowClear="False"
+                Date="{Binding LastStockUpdate}"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Calendar_month}}" />
+            <uranium:DatePickerField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_ExpiredDate}"
+                AllowClear="True"
+                Date="{Binding ExpirationDate}"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Calendar_month}}" />
+            <uranium:TextField
+                Title="{Static strings:AppStrings.InventoryForm_Lbl_BatchNumber}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding BatchNumber}" />
+
+            <Button
+                inputkit:FormView.IsSubmitButton="True"
+                StyleClass="FilledButton"
+                Text="{Static strings:AppStrings.InventoryForm_Btn_Save}" />
+        </inputkit:FormView>
+    </ScrollView>
+</ContentPage>

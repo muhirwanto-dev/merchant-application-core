@@ -1,4 +1,7 @@
-﻿namespace JualIn.App.Mobile.Presentation
+﻿using JualIn.App.Mobile.Presentation.Modules.Dashboard.Views;
+using JualIn.App.Mobile.Presentation.Modules.Inventories.Views;
+
+namespace JualIn.App.Mobile.Presentation
 {
     public partial class AppShell : Shell
     {

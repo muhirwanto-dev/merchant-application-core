@@ -4,15 +4,15 @@
     <TargetFrameworks>net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <FileVersion>1.0.1.0111</FileVersion>
-    <AssemblyVersion>1.0.1.0111</AssemblyVersion>
+    <FileVersion>1.0.1.0114</FileVersion>
+    <AssemblyVersion>1.0.1.0114</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ardalis.SmartEnum" Version="8.2.0" />
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="8.4.0" />
     <PackageReference Include="ErrorOr" Version="2.0.1" />
-    <PackageReference Include="SingleScope.Persistence" Version="6.0.0" />
+    <PackageReference Include="SingleScope.Persistence" Version="7.0.1" />
   </ItemGroup>
 
 </Project>

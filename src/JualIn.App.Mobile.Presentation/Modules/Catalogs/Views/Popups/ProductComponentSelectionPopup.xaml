@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.Popups.ProductComponentSelectionPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:inventory="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels"
+    xmlns:inventory_layout="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.Views.Layouts"
+    xmlns:popups="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.Popups"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels.Popups"
+    xmlns:vm_shared="clr-namespace:JualIn.App.Mobile.Presentation.Shared.ViewModels"
+    x:Name="root"
+    x:DataType="{x:Type vm:ProductComponentSelectionPopupViewModel}"
+    Color="Transparent">
+    <Border
+        Padding="{StaticResource AppLayoutPaddingDialog}"
+        BackgroundColor="{AppThemeBinding Light={StaticResource Background},
+                                          Dark={StaticResource DarkBackground}}"
+        MinimumWidthRequest="{StaticResource DialogMinWidth}"
+        StrokeShape="{RoundRectangle CornerRadius={StaticResource DialogCornerRadius}}"
+        WidthRequest="{StaticResource DialogMaxWidth}">
+        <VerticalStackLayout>
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Inventories}" Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                <BindableLayout.EmptyView>
+                    <horus:MaterialLabel Text="{Static strings:AppStrings.Common_Lbl_NoItems}" />
+                </BindableLayout.EmptyView>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type vm_shared:SelectableItemViewModel(inventory:InventoryViewModel)}">
+                        <Grid>
+                            <inventory_layout:InventorySummaryItemView BindingContext="{Binding Item}">
+                                <inventory_layout:InventorySummaryItemView.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=ViewModel.SelectCommand, Source={x:Reference root}, x:DataType={x:Type popups:ProductComponentSelectionPopup}}" CommandParameter="{Binding Path=BindingContext, Source={RelativeSource AncestorType={x:Type Grid}}, x:DataType={x:Type Grid}}" />
+                                </inventory_layout:InventorySummaryItemView.GestureRecognizers>
+                            </inventory_layout:InventorySummaryItemView>
+
+                            <Border
+                                Margin="{StaticResource CommonSpaceMediumAll}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryFixedDim},
+                                                                  Dark={StaticResource DarkPrimaryFixedDim}}"
+                                HeightRequest="{StaticResource SmallButtonSize}"
+                                HorizontalOptions="End"
+                                IsVisible="{Binding IsSelected}"
+                                StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusCircle}}"
+                                VerticalOptions="Start"
+                                WidthRequest="{StaticResource SmallButtonSize}">
+                                <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={Static icons:MaterialRounded.Check}, Color={AppThemeBinding Light={StaticResource OnPrimaryFixedVariant}, Dark={StaticResource DarkOnPrimaryFixedVariant}}}" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <horus:MaterialDivider Margin="{StaticResource CommonSpaceMicroY}" />
+            <HorizontalStackLayout HorizontalOptions="End">
+                <horus:MaterialButton
+                    Command="{Binding ClearSelectionCommand}"
+                    HeightRequest="{StaticResource SmallButtonSize}"
+                    Text="Clear"
+                    TextColor="{AppThemeBinding Light={StaticResource ErrorRed},
+                                                Dark={StaticResource DarkErrorRed}}"
+                    Type="Text" />
+                <horus:MaterialButton
+                    Command="{Binding DoneCommand}"
+                    HeightRequest="{StaticResource SmallButtonSize}"
+                    Text="Done"
+                    Type="Filled" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

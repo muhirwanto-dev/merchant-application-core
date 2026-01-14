@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Sales.Views.CheckoutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Converters"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:layouts="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Sales.Views.Layouts"
+    xmlns:lucacivale="http://pluginmauibottomsheet.com"
+    xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Sales.Views"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:validations="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels"
+    x:Name="root"
+    Title="{Static strings:AppStrings.CheckoutPage_Lbl_PageTitle}"
+    x:DataType="{x:Type vm:CheckoutViewModel}"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:CheckoutPage}}"
+            Command="{Binding NavigatedToCommand}"
+            EventName="NavigatedTo" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <ScrollView Margin="{StaticResource ItemDetailBottomMargin}">
+            <VerticalStackLayout
+                Margin="{StaticResource AppLayoutPadding}"
+                HorizontalOptions="Fill"
+                Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                <horus:MaterialLabel Text="{Static strings:AppStrings.CheckoutPage_Lbl_CurrentOrder}" Type="TitleMedium" />
+
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding OrderItems}" Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <layouts:OrderItemView />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                    <BindableLayout.EmptyView>
+                        <horus:MaterialLabel Text="{Static strings:AppStrings.Common_Lbl_NoItems}" />
+                    </BindableLayout.EmptyView>
+                </VerticalStackLayout>
+
+                <horus:MaterialDivider />
+
+                <horus:MaterialLabel Text="{Static strings:AppStrings.CheckoutPage_Lbl_Subtotal}" Type="TitleMedium" />
+                <Grid
+                    ColumnDefinitions="auto,*"
+                    ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}"
+                    RowDefinitions="auto,auto,auto">
+                    <horus:MaterialLabel
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalOptions="Fill"
+                        Text="{Static strings:AppStrings.CheckoutPage_Lbl_Subtotal}" />
+                    <horus:MaterialLabel
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="End"
+                        Text="{Binding CurrentOrder.TotalItemPrice, StringFormat='{}{0:C0}'}" />
+                    <HorizontalStackLayout
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        HorizontalOptions="End">
+                        <horus:MaterialLabel
+                            HorizontalOptions="Fill"
+                            Text="{Static strings:AppStrings.CheckoutPage_Lbl_Discount}"
+                            VerticalOptions="Center" />
+                        <horus:MaterialIconButton
+                            Command="{Binding SetDiscountCommand}"
+                            IconTintColor="{AppThemeBinding Light={StaticResource OnSurface},
+                                                            Dark={StaticResource DarkOnSurface}}"
+                            ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                          Glyph={x:Static icons:MaterialRounded.Edit}}"
+                            VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <horus:MaterialLabel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="End"
+                        Text="{Binding CurrentOrder.TotalDiscount, Mode=OneWay, StringFormat='{}-{0:C0}'}"
+                        VerticalOptions="Center" />
+                    <horus:MaterialLabel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        HorizontalOptions="Fill"
+                        Text="{Static strings:AppStrings.CheckoutPage_Lbl_Tax}" />
+                    <horus:MaterialLabel
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="End"
+                        Text="{Binding CurrentOrder.TotalTax, StringFormat='{}{0:C0}'}" />
+                </Grid>
+
+                <Border
+                    Padding="{StaticResource CommonSpaceMediumAll}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                                      Dark={StaticResource DarkPrimaryContainer}}"
+                    StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusMedium}}"
+                    StrokeThickness="0">
+                    <FlexLayout JustifyContent="SpaceBetween">
+                        <horus:MaterialLabel
+                            FlexLayout.Grow="1"
+                            Text="{Static strings:AppStrings.CheckoutPage_Lbl_Total}"
+                            Type="TitleMedium"
+                            VerticalOptions="Center" />
+                        <horus:MaterialLabel
+                            FontAttributes="Bold"
+                            HorizontalTextAlignment="End"
+                            Text="{Binding CurrentOrder.GrandTotal, StringFormat='{}{0:C0}'}"
+                            Type="BodyLarge"
+                            VerticalOptions="Center" />
+                    </FlexLayout>
+                </Border>
+
+                <horus:MaterialLabel Text="{Static strings:AppStrings.CheckoutPage_Lbl_PaymentMethod}" Type="TitleMedium" />
+
+                <FlexLayout
+                    BindableLayout.ItemsSource="{Binding PaymentMethods}"
+                    JustifyContent="Start"
+                    Wrap="Wrap">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type x:String}">
+                            <Border
+                                Margin="{StaticResource CommonSpaceNanoAll}"
+                                Padding="{StaticResource CommonSpaceSmallAll}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Surface},
+                                                                  Dark={StaticResource DarkSurface}}"
+                                FlexLayout.Grow="1"
+                                StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusSmall}}">
+                                <VerticalStackLayout Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                                    <Image
+                                        HeightRequest="{StaticResource IconSizeSmall}"
+                                        HorizontalOptions="Center"
+                                        Source="{FontImageSource FontFamily=MaterialRounded,
+                                                                 Glyph={Binding .,
+                                                                                Converter={converters:PaymentMethodToIconConverter}},
+                                                                 Color={AppThemeBinding Light={StaticResource OnSurface},
+                                                                                        Dark={StaticResource DarkOnSurface}}}"
+                                        WidthRequest="{StaticResource IconSizeSmall}" />
+                                    <horus:MaterialLabel
+                                        HorizontalTextAlignment="Center"
+                                        LineBreakMode="WordWrap"
+                                        Text="{Binding ., Converter={converters:PaymentMethodToTextConverter}}"
+                                        VerticalTextAlignment="Center" />
+                                </VerticalStackLayout>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Value="True">
+                                        <DataTrigger.Binding>
+                                            <MultiBinding Converter="{converters:AllEqualConverter}">
+                                                <Binding
+                                                    x:DataType="{x:Type pages:CheckoutPage}"
+                                                    Path="ViewModel.SelectedPaymentMethod"
+                                                    Source="{x:Reference root}" />
+                                                <Binding Path="." />
+                                            </MultiBinding>
+                                        </DataTrigger.Binding>
+                                        <Setter Property="Stroke" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource DarkPrimary}}" />
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryContainer}, Dark={StaticResource DarkPrimaryContainer}}" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=ViewModel.SelectPaymentMethodCommand, Source={x:Reference root}, x:DataType={x:Type pages:CheckoutPage}}" CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <horus:MaterialButton
+            Margin="{StaticResource CommonSpaceMediumAll}"
+            Command="{Binding GoToPaymentCommand}"
+            CommandParameter="{Binding SelectedPaymentMethod}"
+            HorizontalOptions="Fill"
+            Text="{Static strings:AppStrings.CheckoutPage_Btn_Payment}"
+            VerticalOptions="End" />
+
+        <lucacivale:BottomSheet
+            CornerRadius="{StaticResource CornerRadiusLarge}"
+            IsCancelable="False"
+            IsDraggable="False"
+            IsOpen="{Binding CashPaymentModalOpened}"
+            States="Peek">
+            <lucacivale:BottomSheet.Content>
+                <lucacivale:BottomSheetContent>
+                    <ContentView>
+                        <ContentView.Behaviors>
+                            <lucacivale:BottomSheetPeekBehavior />
+                        </ContentView.Behaviors>
+                        <VerticalStackLayout Margin="{StaticResource CommonSpaceLargeAll}" Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                            <horus:MaterialLabel Text="{Static strings:AppStrings.CheckoutPage_Lbl_PaymentTitle_Cash}" Type="TitleMedium" />
+                            <uranium:TextField
+                                Title="{Static strings:AppStrings.CheckoutPage_Lbl_Payment_Paid}"
+                                AllowClear="True"
+                                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                                       Glyph={Static icons:MaterialRounded.Payments}}"
+                                Text="{Binding PaidAmount}">
+                                <uranium:TextField.Validations>
+                                    <validations:RequiredValidation />
+                                </uranium:TextField.Validations>
+                            </uranium:TextField>
+                            <Grid
+                                ColumnDefinitions="auto,*"
+                                ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}"
+                                RowDefinitions="auto,auto,auto,auto"
+                                RowSpacing="{StaticResource CommonSpaceBetweenMicro}">
+                                <horus:MaterialLabel
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Text="{Static strings:AppStrings.CheckoutPage_Lbl_Payment_Amount}" />
+                                <horus:MaterialLabel
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    HorizontalOptions="Fill"
+                                    HorizontalTextAlignment="End"
+                                    Text="{Binding CurrentOrder.GrandTotal, StringFormat='{0:C0}'}" />
+
+                                <horus:MaterialLabel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Text="{Static strings:AppStrings.CheckoutPage_Lbl_Payment_Paid}" />
+                                <horus:MaterialLabel
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalOptions="Fill"
+                                    HorizontalTextAlignment="End"
+                                    Text="{Binding PaidAmount, StringFormat='{0:C0}'}" />
+
+                                <horus:MaterialDivider Grid.Row="2" Grid.ColumnSpan="2" />
+
+                                <horus:MaterialLabel
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Text="{Static strings:AppStrings.CheckoutPage_Lbl_Payment_Change}" />
+                                <horus:MaterialLabel
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    HorizontalOptions="Fill"
+                                    HorizontalTextAlignment="End"
+                                    Text="{Binding ChangeAmount, StringFormat='{0:C0}'}" />
+                            </Grid>
+
+                            <horus:MaterialButton
+                                Margin="{StaticResource CommonSpaceMediumAll}"
+                                Command="{Binding CashPaymentCommand}"
+                                HorizontalOptions="Fill"
+                                Text="{Static strings:AppStrings.CheckoutPage_Btn_Pay}"
+                                VerticalOptions="End" />
+                        </VerticalStackLayout>
+                    </ContentView>
+                </lucacivale:BottomSheetContent>
+            </lucacivale:BottomSheet.Content>
+        </lucacivale:BottomSheet>
+    </Grid>
+</ContentPage>

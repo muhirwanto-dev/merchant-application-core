@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="JualIn.App.Mobile.Presentation.Modules.Dashboard.Views.Layouts.RevenuePreviewView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+             xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+             xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings">
+    <Grid ColumnDefinitions="*,*"
+          ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}"
+          RowDefinitions="auto,auto,auto"
+          RowSpacing="{StaticResource CommonSpaceBetweenMicro}">
+        <Border Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Padding="{StaticResource CommonSpaceSmallAll}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceContainerLow},
+                                                  Dark={StaticResource DarkSurfaceContainerLow}}"
+                HorizontalOptions="Fill"
+                StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusMedium}}"
+                StrokeThickness="0">
+            <VerticalStackLayout>
+                <horus:MaterialLabel FontAttributes="Bold" Type="TitleSmall">
+                    <horus:MaterialLabel.Triggers>
+                        <DataTrigger Binding="{Binding SelectedRevenueText}"
+                                     TargetType="horus:MaterialLabel"
+                                     Value="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Revenue}">
+                            <Setter Property="Text" Value="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Revenue}" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedRevenueText}"
+                                     TargetType="horus:MaterialLabel"
+                                     Value="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Profit}">
+                            <Setter Property="Text" Value="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Profit}" />
+                        </DataTrigger>
+                    </horus:MaterialLabel.Triggers>
+                </horus:MaterialLabel>
+                <horus:MaterialLabel>
+                    <horus:MaterialLabel.FormattedText>
+                        <FormattedString>
+                            <Span Text="{Binding Currency, FallbackValue=-, StringFormat='{0:C0}'}" />
+                            <Span Text=" " />
+                            <Span FontAttributes="Bold"
+                                  FontSize="{StaticResource FontSizeGrow2}"
+                                  Text="{Binding RevenueValue, FallbackValue='2.000.000'}" />
+                        </FormattedString>
+                    </horus:MaterialLabel.FormattedText>
+                </horus:MaterialLabel>
+                <horus:MaterialLabel HorizontalOptions="End">
+                    <horus:MaterialLabel.Text>
+                        <MultiBinding StringFormat="{}{0}/{1}">
+                            <Binding Path="RevenueValue" />
+                            <Binding Path="RevenueTarget" />
+                        </MultiBinding>
+                    </horus:MaterialLabel.Text>
+                </horus:MaterialLabel>
+                <ProgressBar Progress="{Binding RevenueProgress, FallbackValue=0.4}" />
+            </VerticalStackLayout>
+        </Border>
+
+        <FlexLayout Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    horus:MaterialViewGroup.GroupName="RevenueChipsGroup"
+                    horus:MaterialViewGroup.SelectedValue="{Binding SelectedRevenueText}"
+                    horus:MaterialViewGroup.SelectedValueChangedCommand="{Binding SelectedRevenueChangeCommand}"
+                    horus:MaterialViewGroup.SelectionType="Single"
+                    Direction="Row"
+                    JustifyContent="SpaceBetween"
+                    Wrap="Wrap">
+            <horus:MaterialChip LeadingIcon="{FontImageSource FontFamily=MaterialRounded,
+                                                              Glyph={Static icons:MaterialRounded.Finance_mode}}"
+                                Style="{StaticResource Dashboard_RevenueFilter_Revenue}"
+                                Text="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Revenue}" />
+            <horus:MaterialChip LeadingIcon="{FontImageSource FontFamily=MaterialRounded,
+                                                              Glyph={Static icons:MaterialRounded.Attach_money}}"
+                                Style="{StaticResource Dashboard_RevenueFilter_Revenue}"
+                                Text="{Static strings:AppStrings.DashboardPage_RevenuePreview_Filter_Profit}" />
+        </FlexLayout>
+
+        <horus:MaterialLabel Grid.Row="2"
+                             Grid.ColumnSpan="2"
+                             Margin="{StaticResource CommonSpaceMicroTop}"
+                             Type="LabelSmall">
+            <horus:MaterialLabel.Text>
+                <MultiBinding StringFormat="{}{0}: {1}">
+                    <Binding Source="{Static strings:AppStrings.DashboardPage_RevenuePreview_LastUpdated}" />
+                    <Binding FallbackValue="08 Aug 2025, 19:58"
+                             Path="LastRevenueUpdate"
+                             StringFormat="{}{0:dd MMM yyyy, HH:mm}" />
+                </MultiBinding>
+            </horus:MaterialLabel.Text>
+        </horus:MaterialLabel>
+    </Grid>
+</ContentView>

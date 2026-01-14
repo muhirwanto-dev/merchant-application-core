@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Sales.Views.Layouts.SaleProductView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels"
+    x:DataType="{x:Type vm:SaleProductViewModel}">
+    <ContentView.Resources>
+        <ControlTemplate x:Key="SelectedButtonsFooter">
+            <Grid ColumnDefinitions="auto,*,auto" ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}">
+                <horus:MaterialIconButton
+                    Grid.Column="0"
+                    Command="{Binding SubtractItemCommand, Source={RelativeSource AncestorType={x:Type vm:PointOfSaleViewModel}}, x:DataType={x:Type vm:PointOfSaleViewModel}}"
+                    CommandParameter="{Binding .}"
+                    CornerRadius="{StaticResource CornerRadiusMediumInt}"
+                    ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                  Glyph={Static icons:MaterialRounded.Remove}}"
+                    Type="Filled"
+                    VerticalOptions="Center" />
+                <uranium:TextField
+                    Grid.Column="1"
+                    BorderThickness="0"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding OnCartQuantity, FallbackValue=0}"
+                    VerticalOptions="Center" />
+                <horus:MaterialIconButton
+                    Grid.Column="2"
+                    Command="{Binding AddItemCommand, Source={RelativeSource AncestorType={x:Type vm:PointOfSaleViewModel}}, x:DataType={x:Type vm:PointOfSaleViewModel}}"
+                    CommandParameter="{Binding .}"
+                    CornerRadius="{StaticResource CornerRadiusMediumInt}"
+                    ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                  Glyph={Static icons:MaterialRounded.Add}}"
+                    Type="Filled"
+                    VerticalOptions="Center" />
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="UnSelectedButtonsFooter" />
+    </ContentView.Resources>
+
+    <horus:MaterialCard
+        Padding="{StaticResource CommonSpaceSmallAll}"
+        BorderColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                      Dark={StaticResource DarkPrimaryContainer}}"
+        Command="{Binding SelectProductCommand, Source={RelativeSource AncestorType={x:Type vm:PointOfSaleViewModel}}, x:DataType={x:Type vm:PointOfSaleViewModel}}"
+        CommandParameter="{Binding .}"
+        CornerRadius="{StaticResource MaterialCornerRadiusMedium}"
+        Type="Outlined"
+        WidthRequest="160">
+        <Grid
+            ColumnDefinitions="*,auto"
+            ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}"
+            RowDefinitions="auto,auto,auto,auto"
+            RowSpacing="{StaticResource CommonSpaceBetweenMicro}">
+            <Border
+                Grid.Row="0"
+                Grid.Column="0"
+                BackgroundColor="{StaticResource SurfaceContainer}"
+                HeightRequest="{StaticResource SaleProductImageSize}"
+                HorizontalOptions="Start"
+                StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusMedium}}"
+                StrokeThickness="0"
+                WidthRequest="{StaticResource SaleProductImageSize}">
+                <Image Aspect="AspectFill" Source="{Binding Entity.Image, Converter={toolkit:ByteArrayToImageSourceConverter}}" />
+            </Border>
+
+            <horus:MaterialChip
+                Grid.Row="0"
+                Grid.Column="1"
+                Padding="{StaticResource CommonSpaceMicroAll}"
+                BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                                  Dark={StaticResource DarkPrimaryContainer}}"
+                BorderWidth="0"
+                FontSize="{StaticResource FontSizeShrink1}"
+                HorizontalOptions="End"
+                ShadowColor="Transparent"
+                Text="{Binding Entity.Price, StringFormat='{}{0:C0}', FallbackValue=0}"
+                VerticalOptions="Start" />
+
+            <horus:MaterialLabel
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                FontAttributes="Bold"
+                LineBreakMode="TailTruncation"
+                Text="{Binding Entity.Name}"
+                Type="TitleSmall" />
+            <horus:MaterialLabel
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Type="LabelSmall">
+                <horus:MaterialLabel.Text>
+                    <MultiBinding StringFormat="{}{0}: {1}">
+                        <Binding Source="{Static strings:AppStrings.Product_Lbl_Stock}" />
+                        <Binding Path="Entity.Stock" />
+                    </MultiBinding>
+                </horus:MaterialLabel.Text>
+            </horus:MaterialLabel>
+
+            <ContentView
+                Grid.Row="3"
+                Grid.ColumnSpan="3"
+                Padding="0">
+                <ContentView.Triggers>
+                    <DataTrigger
+                        Binding="{Binding IsSelected}"
+                        TargetType="ContentView"
+                        Value="True">
+                        <Setter Property="ControlTemplate" Value="{StaticResource SelectedButtonsFooter}" />
+                        <Setter Property="HeightRequest" Value="{StaticResource MinTouchTargetSize}" />
+                    </DataTrigger>
+                    <DataTrigger
+                        Binding="{Binding IsSelected}"
+                        TargetType="ContentView"
+                        Value="False">
+                        <Setter Property="ControlTemplate" Value="{StaticResource UnSelectedButtonsFooter}" />
+                    </DataTrigger>
+                </ContentView.Triggers>
+            </ContentView>
+        </Grid>
+        <horus:MaterialCard.Triggers>
+            <DataTrigger
+                Binding="{Binding IsSelected}"
+                TargetType="horus:MaterialCard"
+                Value="True">
+                <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource DarkPrimary}}" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryContainer}, Dark={StaticResource DarkPrimaryContainer}}" />
+            </DataTrigger>
+        </horus:MaterialCard.Triggers>
+    </horus:MaterialCard>
+</ContentView>

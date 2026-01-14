@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<horus:MaterialChip
+    x:Class="JualIn.App.Mobile.Presentation.UI.Controls.Filtering.CountableFilter"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Filtering"
+    x:DataType="{x:Type vm:CountableFilterViewModel}"
+    ShadowColor="Transparent"
+    Text="{Binding Key}"
+    Type="Filter">
+    <horus:MaterialChip.Triggers>
+        <DataTrigger
+            Binding="{Binding IsSelected}"
+            TargetType="horus:MaterialChip"
+            Value="True">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PrimaryFixed}, Dark={StaticResource DarkPrimaryFixed}}" />
+            <Setter Property="LeadingIcon" Value="{FontImageSource FontFamily=MaterialRounded, Glyph={Static icons:MaterialRounded.Check}}" />
+        </DataTrigger>
+        <DataTrigger
+            Binding="{Binding IsSelected}"
+            TargetType="horus:MaterialChip"
+            Value="False">
+            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource DarkSurface}}" />
+            <Setter Property="LeadingIcon" Value="{x:Null}" />
+        </DataTrigger>
+    </horus:MaterialChip.Triggers>
+</horus:MaterialChip>

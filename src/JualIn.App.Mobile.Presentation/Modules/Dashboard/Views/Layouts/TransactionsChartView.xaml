@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="JualIn.App.Mobile.Presentation.Modules.Dashboard.Views.Layouts.TransactionsChartView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:charts="clr-namespace:Microcharts;assembly=Microcharts.Maui"
+             xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+             xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+             xmlns:microchart="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings">
+    <Border StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusSmall}}" StrokeThickness="0">
+        <Grid Padding="{StaticResource CommonSpaceSmallAll}"
+              BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                                Dark={StaticResource DarkPrimaryContainer}}"
+              ColumnDefinitions="auto,*"
+              RowDefinitions="auto,auto,auto">
+            <HorizontalStackLayout Grid.Row="0"
+                                   Grid.Column="0"
+                                   Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                <Image HeightRequest="{StaticResource IconSizeSmall}" Source="{FontImageSource FontFamily=MaterialRounded, Glyph={Static icons:MaterialRounded.Bar_chart_4_bars}, Color={AppThemeBinding Light={StaticResource OnPrimaryContainer}, Dark={StaticResource DarkOnPrimaryContainer}}}" />
+                <horus:MaterialLabel HorizontalOptions="Fill"
+                                     HorizontalTextAlignment="Start"
+                                     Text="{Static strings:AppStrings.DashboardPage_TransactionChart_Title}"
+                                     Type="TitleSmall"
+                                     VerticalTextAlignment="Center" />
+            </HorizontalStackLayout>
+
+            <horus:MaterialIconButton Grid.Row="0"
+                                      Grid.Column="1"
+                                      HorizontalOptions="End"
+                                      ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                                    Glyph={Static icons:MaterialRounded.Hourglass},
+                                                                    Color={AppThemeBinding Light={StaticResource OnPrimaryContainer},
+                                                                                           Dark={StaticResource DarkOnPrimaryContainer}}}" />
+
+            <!-- todo show the chart -->
+            <microchart:ChartView Grid.Row="1"
+                                  Grid.ColumnSpan="2"
+                                  Chart="{charts:LineChart}" />
+        </Grid>
+    </Border>
+</ContentView>

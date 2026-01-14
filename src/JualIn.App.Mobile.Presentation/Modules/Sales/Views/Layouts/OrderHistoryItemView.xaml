@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Sales.Views.Layouts.OrderHistoryItemView"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:models="clr-namespace:JualIn.App.Mobile.Presentation.Data.Dtos.Sales;assembly=JualIn.App.Mobile.Presentation.Data"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels"
+    x:DataType="{x:Type models:OrderDto}">
+    <horus:MaterialCard
+        Padding="{StaticResource CommonSpaceSmallAll}"
+        BorderColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                      Dark={StaticResource DarkPrimaryContainer}}"
+        Command="{Binding OpenTransactionDetailCommand, Source={RelativeSource AncestorType={x:Type vm:OrderHistoryViewModel}}, x:DataType={x:Type vm:OrderHistoryViewModel}}"
+        CommandParameter="{Binding .}"
+        CornerRadius="{StaticResource MaterialCornerRadiusMedium}"
+        Type="Outlined">
+
+        <Grid
+            ColumnDefinitions="3*,auto,*"
+            ColumnSpacing="{StaticResource CommonSpaceBetweenSmall}"
+            RowDefinitions="auto,auto,auto"
+            RowSpacing="{StaticResource CommonSpaceBetweenMicro}">
+            <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                <horus:MaterialLabel Text="{Binding Id, StringFormat='{}ID: {0}'}" Type="TitleSmall" />
+                <horus:MaterialLabel Text="{Binding CreatedAt, StringFormat='{}{0:dddd, dd MMMM yyyy}'}" Type="BodySmall" />
+            </VerticalStackLayout>
+
+            <horus:MaterialChip
+                Grid.Row="0"
+                Grid.Column="1"
+                BackgroundColor="{AppThemeBinding Light={StaticResource OkGreenContainer},
+                                                  Dark={StaticResource DarkOkGreenContainer}}"
+                BorderWidth="0"
+                HorizontalOptions="Start"
+                ShadowColor="Transparent"
+                Text="{Binding Status}"
+                TextColor="{AppThemeBinding Light={StaticResource OnOkGreenContainer},
+                                            Dark={StaticResource DarkOnOkGreenContainer}}"
+                VerticalOptions="Start" />
+
+            <horus:MaterialIconButton
+                Grid.Row="0"
+                Grid.Column="2"
+                HorizontalOptions="End"
+                ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                              Glyph={Static icons:MaterialRounded.More_horiz}}"
+                VerticalOptions="Start" />
+
+            <horus:MaterialLabel
+                Grid.Row="1"
+                Grid.Column="0"
+                FontAttributes="Bold"
+                Text="{Binding GrandTotal, StringFormat='Rp {0:N0}'}"
+                Type="HeadlineSmall" />
+            <horus:MaterialLabel
+                Grid.Row="2"
+                Grid.Column="0"
+                Text="{Binding CustomerName, StringFormat='Mr./Mrs. {0}', FallbackValue='Unknown'}" />
+
+            <Grid
+                Grid.Row="1"
+                Grid.RowSpan="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                HorizontalOptions="End"
+                VerticalOptions="End">
+                <Button
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Primary},
+                                                      Dark={StaticResource DarkPrimary}}"
+                    HeightRequest="{StaticResource SmallButtonSize}"
+                    IsVisible="{Binding IsConfirmed, Converter={toolkit:InvertedBoolConverter}}"
+                    Text="Confirm"
+                    TextColor="{AppThemeBinding Light={StaticResource OnPrimary},
+                                                Dark={StaticResource DarkOnPrimary}}" />
+
+                <HorizontalStackLayout
+                    HorizontalOptions="End"
+                    IsVisible="{Binding IsConfirmed}"
+                    Spacing="{StaticResource CommonSpaceBetweenMicro}"
+                    VerticalOptions="End">
+                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={Static icons:MaterialRounded.Check}, Color={AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource DarkPrimary}}}" VerticalOptions="Center" />
+                    <Label
+                        Text="Confirmed"
+                        TextColor="{AppThemeBinding Light={StaticResource Primary},
+                                                    Dark={StaticResource DarkPrimary}}"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Grid>
+        </Grid>
+    </horus:MaterialCard>
+</ContentView>

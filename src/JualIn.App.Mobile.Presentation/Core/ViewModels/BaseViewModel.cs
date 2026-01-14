@@ -1,8 +1,6 @@
-﻿using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.Messaging;
-using JualIn.App.Mobile.Presentation.Core.Messaging;
-using JualIn.App.Mobile.Presentation.UI.Popups;
+﻿
+using SingleScope.Maui.Dialogs.Abstractions;
+using SingleScope.Maui.Loadings.Abstractions;
 using SingleScope.Mvvm.Base;
 using SingleScope.Mvvm.Maui;
 using SingleScope.Navigations.Abstractions;
@@ -12,13 +10,17 @@ namespace JualIn.App.Mobile.Presentation.Core.ViewModels
 {
     public abstract class BaseViewModel : InteractiveViewModelBase
     {
-        protected readonly IReportingService _reporting;
+        protected readonly IDialogService _dialogService;
+        protected readonly ILoadingService _loadingService;
         protected readonly INavigationService _navigation;
+        protected readonly IReportingService _reporting;
 
         protected BaseViewModel()
         {
-            _reporting = MauiServiceProvider.Current.GetRequiredService<IReportingService>();
+            _dialogService = MauiServiceProvider.Current.GetRequiredService<IDialogService>();
+            _loadingService = MauiServiceProvider.Current.GetRequiredService<ILoadingService>();
             _navigation = MauiServiceProvider.Current.GetRequiredService<INavigationService>();
+            _reporting = MauiServiceProvider.Current.GetRequiredService<IReportingService>();
         }
     }
 }

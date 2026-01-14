@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Diagnostics;
-using JualIn.App.Mobile.Presentation.Core.Extensions;
 using JualIn.App.Mobile.Presentation.Infrastructure.Api;
-using JualIn.App.Mobile.Presentation.Infrastructure.Storages;
+using JualIn.App.Mobile.Presentation.Modules.Auth.Abstractions;
+using JualIn.App.Mobile.Presentation.Modules.Auth.Models;
+using JualIn.App.Mobile.Presentation.Shared.Constants;
 using JualIn.Contracts.Dtos.Account;
+using JualIn.SharedLib.Extensions.Refit;
 using Microsoft.Extensions.Logging;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Auth.Services
@@ -29,17 +31,6 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.Services
             _userIdentity = userIdentity;
 
             return Task.WhenAll([
-
-/* Unmerged change from project 'Belibu.App (net9.0-ios)'
-Before:
-                SecureStorage.Default.SetAsync(Constants.StorageKeys.AccessToken, accessToken),
-                SecureStorage.Default.SetAsync(Constants.StorageKeys.RefreshToken, refreshToken ?? string.Empty),
-            ]);
-After:
-                SecureStorage.Default.SetAsync(StorageKeys.AccessToken, accessToken),
-                SecureStorage.Default.SetAsync(StorageKeys.RefreshToken, refreshToken ?? string.Empty),
-            ]);
-*/
                 SecureStorage.Default.SetAsync(StorageKeys.AccessToken, accessToken),
                 SecureStorage.Default.SetAsync(StorageKeys.RefreshToken, refreshToken ?? string.Empty),
             ]);
@@ -52,10 +43,10 @@ After:
                 return;
             }
 
-            var result = await _api.GetUserInformationAsync(_userIdentity);
+            var result = await _api.GetUserInformationAsync(_userIdentity, cancellationToken);
             var msg = result.GetMessage();
 
-            _logger.LogInformation($"Fetching user data result: {msg}");
+            _logger.LogInformation("Fetching user data result: {msg}", msg);
 
             if (!result.IsSuccessful)
             {
@@ -73,19 +64,6 @@ After:
             );
         }
 
-
-        /* Unmerged change from project 'Belibu.App (net9.0-ios)'
-        Before:
-                public Task<string?> GetAccessTokenAsync() => SecureStorage.Default.GetAsync(Constants.StorageKeys.AccessToken);
-
-                public Task<string?> GetRefreshTokenAsync() => SecureStorage.Default.GetAsync(Constants.StorageKeys.RefreshToken);
-            }
-        After:
-                public Task<string?> GetAccessTokenAsync() => SecureStorage.Default.GetAsync(StorageKeys.AccessToken);
-
-                public Task<string?> GetRefreshTokenAsync() => SecureStorage.Default.GetAsync(StorageKeys.RefreshToken);
-            }
-        */
         public Task<string?> GetAccessTokenAsync() => SecureStorage.Default.GetAsync(StorageKeys.AccessToken);
 
         public Task<string?> GetRefreshTokenAsync() => SecureStorage.Default.GetAsync(StorageKeys.RefreshToken);

@@ -33,6 +33,7 @@ namespace JualIn.Domain.Catalogs.Entities
         public void Sell(int quantity)
         {
             Stock.Decrease(quantity);
+            UpdatedAt = DateTime.UtcNow;
 
             if (Stock == 0)
             {

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using JualIn.Domain.Common.Entities;
+using JualIn.Domain.Sales.ValueObjects;
 
 namespace JualIn.Domain.Sales.Entities
 {
@@ -11,7 +12,7 @@ namespace JualIn.Domain.Sales.Entities
         public string TransactionId { get; set; } = string.Empty;
 
         [StringLength(64)]
-        public string TransactionType { get; set; } = string.Empty;
+        public TransactionType TransactionType { get; set; } = TransactionType.Sale;
 
         public long OrderId { get; set; }
 

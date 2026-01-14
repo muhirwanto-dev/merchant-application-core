@@ -110,6 +110,12 @@ namespace JualIn.App.Mobile.Data.Contexts
                 .IsUnique();
             modelBuilder.Entity<OrderTransaction>()
                 .HasIndex(x => x.OrderId);
+            modelBuilder.Entity<OrderTransaction>()
+                .Property(x => x.TransactionType)
+                .HasConversion(
+                    toDb => toDb.Value,
+                    fromDb => TransactionType.FromValue(fromDb)
+                );
 
             modelBuilder.Entity<Product>()
                 .HasIndex(x => x.Name);

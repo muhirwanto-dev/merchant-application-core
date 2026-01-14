@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using JualIn.Domain.Common.Messaging;
 using SingleScope.Persistence.Abstraction;
 
 namespace JualIn.Domain.Common.Entities

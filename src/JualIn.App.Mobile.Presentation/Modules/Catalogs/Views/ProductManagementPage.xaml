@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.ProductManagementPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:constants="clr-namespace:JualIn.App.Mobile.Presentation.Shared.Constants"
+    xmlns:controls="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls"
+    xmlns:converters="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Converters"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:layouts="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.Layouts"
+    xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.Views"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels"
+    x:Name="root"
+    Title="{Static strings:AppStrings.ProductManagementPage_Lbl_PageTitle}"
+    x:DataType="{x:Type vm:ProductManagementViewModel}"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:ProductManagementPage}}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:ProductManagementPage}}"
+            Command="{Binding NavigatedToCommand}"
+            EventName="NavigatedTo" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Margin="{StaticResource AppLayoutPadding}"
+            HorizontalOptions="Fill"
+            Spacing="{StaticResource CommonSpaceBetweenSmall}">
+            <Grid ColumnDefinitions="*,auto,auto" ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}">
+                <controls:AppSearchBar Grid.Column="0" HorizontalOptions="Fill" />
+                <horus:MaterialIconButton
+                    Grid.Column="1"
+                    Margin="{StaticResource CommonSpaceMicroTop}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},
+                                                      Dark={StaticResource DarkSurfaceVariant}}"
+                    Command="{Binding OpenScannerCommand}"
+                    CornerRadius="{StaticResource CornerRadiusSmallInt}"
+                    HeightRequest="{StaticResource AutocompleteHeight}"
+                    IconTintColor="{AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                    Dark={StaticResource DarkOnSurfaceVariant}}"
+                    ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                  Glyph={Static icons:MaterialRounded.Barcode_scanner},
+                                                  Size={StaticResource IconSizeSmall}}"
+                    IsVisible="{Binding Source={Static constants:Preprocessor.USE_VERSION_0}, Converter={toolkit:InvertedBoolConverter}}"
+                    Type="Filled"
+                    VerticalOptions="Center"
+                    WidthRequest="{StaticResource AutocompleteHeight}" />
+                <horus:MaterialIconButton
+                    Grid.Column="2"
+                    Margin="{StaticResource CommonSpaceMicroTop}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},
+                                                      Dark={StaticResource DarkSurfaceVariant}}"
+                    Command="{Binding AddProductCommand}"
+                    CornerRadius="{StaticResource CornerRadiusSmallInt}"
+                    HeightRequest="{StaticResource AutocompleteHeight}"
+                    IconTintColor="{AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                    Dark={StaticResource DarkOnSurfaceVariant}}"
+                    ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                  Glyph={Static icons:MaterialRounded.Add},
+                                                  Size={StaticResource IconSizeSmall}}"
+                    Type="Filled"
+                    VerticalOptions="Center"
+                    WidthRequest="{StaticResource AutocompleteHeight}" />
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ProductSummaries}" Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                <BindableLayout.EmptyView>
+                    <horus:MaterialLabel Text="{Static strings:AppStrings.Common_Lbl_NoItems}" />
+                </BindableLayout.EmptyView>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <layouts:ProductSummaryItemView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <horus:MaterialProgressIndicator IsVisible="{Binding IsRefreshing}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

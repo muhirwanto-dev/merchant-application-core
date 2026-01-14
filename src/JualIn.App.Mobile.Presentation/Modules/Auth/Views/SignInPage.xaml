@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Auth.Views.SignInPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:inputkit="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
+    xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Auth.Views"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:validations="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels"
+    x:Name="root"
+    Title="SignIn"
+    x:DataType="{x:Type vm:SignInViewModel}">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:SignInPage}}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Margin="{StaticResource AppLayoutPadding}"
+            HorizontalOptions="Fill"
+            Spacing="{StaticResource CommonSpaceBetweenSmall}">
+            <Image
+                Margin="{StaticResource CommonSpaceLargeTop}"
+                Aspect="AspectFit"
+                HeightRequest="72"
+                Source="img_logo.png"
+                WidthRequest="72" />
+
+            <horus:MaterialLabel
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="{Static strings:AppStrings.SignInPage_Lbl_Title}"
+                Type="TitleLarge" />
+            <horus:MaterialLabel
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="{Static strings:AppStrings.SignInPage_Lbl_SubTitle}" />
+
+            <inputkit:FormView
+                Margin="{StaticResource CommonSpaceMediumY}"
+                Spacing="{StaticResource CommonSpaceBetweenSmall}"
+                SubmitCommand="{Binding SignInCommand}">
+                <uranium:TextField
+                    Title="{Static strings:AppStrings.SignInPage_Lbl_FormTitle_Email}"
+                    AllowClear="True"
+                    ClearButtonVisibility="WhileEditing"
+                    Text="{Binding Email}">
+                    <uranium:TextField.Validations>
+                        <validations:RequiredValidation />
+                    </uranium:TextField.Validations>
+                </uranium:TextField>
+                <uranium:TextField
+                    Title="{Static strings:AppStrings.SignInPage_Lbl_FormTitle_Password}"
+                    AllowClear="True"
+                    ClearButtonVisibility="WhileEditing"
+                    IsPassword="True"
+                    Text="{Binding Password}">
+                    <uranium:TextField.Attachments>
+                        <uranium:TextFieldPasswordShowHideAttachment />
+                    </uranium:TextField.Attachments>
+                    <uranium:TextField.Validations>
+                        <validations:RequiredValidation />
+                    </uranium:TextField.Validations>
+                </uranium:TextField>
+                <Button
+                    inputkit:FormView.IsSubmitButton="True"
+                    StyleClass="FilledButton"
+                    Text="{Static strings:AppStrings.SignInPage_Btn_SignIn}" />
+
+                <horus:MaterialLabel
+                    Text="{Static strings:AppStrings.SignInPage_Btn_ForgotPassword}"
+                    TextColor="{AppThemeBinding Light={StaticResource Primary},
+                                                Dark={StaticResource DarkPrimary}}"
+                    TextDecorations="Underline">
+                    <horus:MaterialLabel.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                    </horus:MaterialLabel.GestureRecognizers>
+                </horus:MaterialLabel>
+            </inputkit:FormView>
+
+            <Grid ColumnDefinitions="*,auto,*" ColumnSpacing="{StaticResource CommonSpaceBetweenSmall}">
+                <horus:MaterialDivider Grid.Column="0" />
+                <horus:MaterialLabel
+                    Grid.Column="1"
+                    HorizontalOptions="Center"
+                    Text="{Static strings:AppStrings.SignInPage_Lbl_SocialSignInDivider}"
+                    Type="LabelMedium"
+                    VerticalTextAlignment="Center" />
+                <horus:MaterialDivider Grid.Column="2" />
+            </Grid>
+
+            <VerticalStackLayout
+                Margin="{StaticResource CommonSpaceSmallY}"
+                HorizontalOptions="Fill"
+                Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                <uranium:ButtonView
+                    BackgroundColor="White"
+                    HeightRequest="{StaticResource MinTouchTargetSize}"
+                    Stroke="{AppThemeBinding Light={StaticResource Primary},
+                                             Dark={StaticResource DarkPrimary}}"
+                    StrokeShape="{RoundRectangle CornerRadius=20}"
+                    TappedCommand="{Binding SignInWithGoogleCommand}">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                        <Image HeightRequest="{StaticResource FontSizeBase}" Source="ic_google" />
+                        <horus:MaterialLabel Text="{Static strings:AppStrings.SignInPage_Btn_SignInWithGoogle}" VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
+                </uranium:ButtonView>
+                <uranium:ButtonView
+                    BackgroundColor="#3B5998"
+                    HeightRequest="{StaticResource MinTouchTargetSize}"
+                    StrokeShape="{RoundRectangle CornerRadius=20}"
+                    TappedCommand="{Binding SignInWithFacebookCommand}">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                        <Image HeightRequest="{StaticResource FontSizeBase}" Source="ic_facebook" />
+                        <horus:MaterialLabel
+                            Text="{Static strings:AppStrings.SignInPage_Btn_SignInWithFacebook}"
+                            TextColor="{AppThemeBinding Light={StaticResource OnPrimary},
+                                                        Dark={StaticResource DarkOnPrimary}}"
+                            VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
+                </uranium:ButtonView>
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                <horus:MaterialLabel Text="{Static strings:AppStrings.SignInPage_Lbl_DontHaveAccount}" VerticalTextAlignment="Center" />
+                <horus:MaterialLabel
+                    Text="{Static strings:AppStrings.SignInPage_Btn_SignUp}"
+                    TextColor="{AppThemeBinding Light={StaticResource Primary},
+                                                Dark={StaticResource DarkPrimary}}"
+                    TextDecorations="Underline">
+                    <horus:MaterialLabel.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SignUpCommand}" />
+                    </horus:MaterialLabel.GestureRecognizers>
+                </horus:MaterialLabel>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

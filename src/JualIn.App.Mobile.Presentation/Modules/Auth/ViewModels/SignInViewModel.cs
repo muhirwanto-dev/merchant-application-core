@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using JualIn.App.Mobile.Presentation.Core.Extensions.SingleScope;
 using JualIn.App.Mobile.Presentation.Core.ViewModels;
 using JualIn.App.Mobile.Presentation.Infrastructure.Api;
-using JualIn.App.Mobile.Presentation.Modules.Auth.Services;
+using JualIn.App.Mobile.Presentation.Modules.Auth.Abstractions;
+using JualIn.App.Mobile.Presentation.Modules.Auth.Views;
+using JualIn.App.Mobile.Presentation.Modules.Dashboard.Views;
+using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.Contracts.Dtos.Auth.EmailSignIn;
-using UraniumUI.Dialogs;
+using SingleScope.Maui.Dialogs;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
 {
@@ -39,7 +40,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
 
@@ -49,14 +50,14 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             try
             {
                 using var _1 = StartScopedUserInteraction();
-                //using var _2 = _dialogService.ShowFullPageLoading();
+                using var _2 = _loadingService.Show();
 
                 var response = await _api.SignInAsync(new EmailSignInRequestDto(Email!, Password!, RememberMe: false));
                 if (response.IsSuccessful && response.Content is EmailSignInResponseDto dto)
                 {
                     if (!dto.IsEmailConfirmed)
                     {
-                        await _dialogService.ShowInfoDialogAsync(AppStrings.SignInPage_Msg_EmailNotConfirmed);
+                        await _dialogService.ShowAsync(Alert.Info(AppStrings.SignInPage_Msg_EmailNotConfirmed));
                         return;
                     }
 
@@ -73,7 +74,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
 
@@ -88,7 +89,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
 
@@ -101,7 +102,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
 
@@ -114,7 +115,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
 
@@ -127,7 +128,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             }
             catch (Exception ex)
             {
-                _reporting.Report(ex);
+                _reporting.ReportProblems(ex);
             }
         }
     }

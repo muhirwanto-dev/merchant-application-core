@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.ProductFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:constants="clr-namespace:JualIn.App.Mobile.Presentation.Shared.Constants"
+    xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
+    xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
+    xmlns:inputkit="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
+    xmlns:layouts="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.Layouts"
+    xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.Views"
+    xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:uranium="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+    xmlns:validations="clr-namespace:InputKit.Shared.Validations;assembly=InputKit.Maui"
+    xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels"
+    x:Name="root"
+    Title="{Static strings:AppStrings.ProductForm_Lbl_PageTitle}"
+    x:DataType="{x:Type vm:ProductFormViewModel}"
+    Shell.TabBarIsVisible="False">
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:ProductFormPage}}"
+            Command="{Binding AppearingCommand}"
+            EventName="Appearing" />
+    </ContentPage.Behaviors>
+
+    <ScrollView>
+        <inputkit:FormView
+            Margin="{StaticResource AppLayoutPadding}"
+            HorizontalOptions="Fill"
+            Spacing="{StaticResource CommonSpaceBetweenSmall}"
+            SubmitCommand="{Binding SaveCommand}">
+            <Border
+                HeightRequest="210"
+                StrokeShape="{RoundRectangle CornerRadius={StaticResource CornerRadiusMediumInt},
+                                             BackgroundColor={AppThemeBinding Light={StaticResource Outline},
+                                                                              Dark={StaticResource DarkOutline}}}"
+                WidthRequest="210">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding SelectImageCommand}" />
+                </Border.GestureRecognizers>
+                <Grid>
+                    <Image
+                        Aspect="AspectFill"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNotNullConverter}}"
+                        Source="{Binding Image, Converter={toolkit:ByteArrayToImageSourceConverter}}" />
+                    <Image
+                        HeightRequest="48"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNullConverter}}"
+                        Source="{FontImageSource FontFamily=MaterialRounded,
+                                                 Glyph={Static icons:MaterialRounded.Add},
+                                                 Color={AppThemeBinding Light={StaticResource Primary},
+                                                                        Dark={StaticResource DarkPrimary}},
+                                                 Size={StaticResource MinTouchTargetSize}}" />
+                    <horus:MaterialIconButton
+                        Margin="{StaticResource CommonSpaceMicroAll}"
+                        HorizontalOptions="End"
+                        IconTintColor="{AppThemeBinding Light={StaticResource White},
+                                                        Dark={StaticResource Black}}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={x:Static icons:MaterialRounded.Delete}}"
+                        IsVisible="{Binding Image, Converter={toolkit:IsNotNullConverter}}" />
+                </Grid>
+            </Border>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.ProductForm_Lbl_ProductName}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding Name}">
+                <uranium:TextField.Validations>
+                    <validations:RequiredValidation />
+                </uranium:TextField.Validations>
+            </uranium:TextField>
+            <uranium:EditorField Title="{Static strings:AppStrings.ProductForm_Lbl_ProductDescription}" Text="{Binding Description}" />
+            <uranium:PickerField
+                Title="{Static strings:AppStrings.ProductForm_Lbl_Category}"
+                AllowClear="False"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Keyboard_arrow_down}}"
+                ItemsSource="{Binding ProductCategories}"
+                SelectedItem="{Binding Category}">
+                <uranium:PickerField.Attachments>
+                    <Button
+                        Padding="{StaticResource CommonSpaceSmallX}"
+                        Command="{Binding AddCategoryCommand}"
+                        HeightRequest="{StaticResource IconSizeSmall}"
+                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                      Glyph={Static icons:MaterialRounded.Add},
+                                                      Color={AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                                             Dark={StaticResource DarkOnSurfaceVariant}},
+                                                      Size={StaticResource IconSizeSmall}}"
+                        StyleClass="TextButton"
+                        Text="{Static strings:AppStrings.ProductForm_Btn_AddCategory}" />
+                </uranium:PickerField.Attachments>
+            </uranium:PickerField>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.ProductForm_Lbl_Price}"
+                AllowClear="True"
+                ClearButtonVisibility="WhileEditing"
+                Icon="{FontImageSource FontFamily=MaterialRounded,
+                                       Glyph={Static icons:MaterialRounded.Sell}}"
+                Text="{Binding Price}">
+                <uranium:TextField.Validations>
+                    <validations:RequiredValidation />
+                </uranium:TextField.Validations>
+            </uranium:TextField>
+            <uranium:TextField
+                Title="{Static strings:AppStrings.ProductForm_Lbl_Stock}"
+                ClearButtonVisibility="WhileEditing"
+                Text="{Binding Stock}" />
+
+            <horus:MaterialDivider />
+
+            <Grid
+                ColumnDefinitions="auto,auto,*"
+                ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}"
+                IsVisible="{Binding Source={Static constants:Preprocessor.USE_VERSION_0}, Converter={toolkit:InvertedBoolConverter}}">
+                <horus:MaterialLabel
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalOptions="Fill"
+                    Text="{Static strings:AppStrings.ProductForm_Lbl_Components}"
+                    Type="TitleMedium"
+                    VerticalOptions="Center" />
+                <horus:MaterialLabel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalTextAlignment="End"
+                    VerticalOptions="Center"
+                    VerticalTextAlignment="Center">
+                    <horus:MaterialLabel.Text>
+                        <MultiBinding StringFormat="{}({0}) {1}">
+                            <Binding Path="ProductComponents.Count" />
+                            <Binding Source="{Static strings:AppStrings.Common_Lbl_Items_Postfix}" />
+                        </MultiBinding>
+                    </horus:MaterialLabel.Text>
+                </horus:MaterialLabel>
+                <Button
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Padding="{StaticResource CommonSpaceSmallX}"
+                    Command="{Binding EditComponentCommand}"
+                    HeightRequest="{StaticResource SmallButtonSize}"
+                    HorizontalOptions="End"
+                    ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                                  Glyph={Static icons:MaterialRounded.Edit},
+                                                  Color={AppThemeBinding Light={StaticResource OnSurfaceVariant},
+                                                                         Dark={StaticResource DarkOnSurfaceVariant}},
+                                                  Size={StaticResource IconSizeSmall}}"
+                    StyleClass="TextButton"
+                    Text="{Static strings:AppStrings.Common_Btn_Edit}"
+                    VerticalOptions="Center" />
+
+            </Grid>
+
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding ProductComponents}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <layouts:ProductComponentItemView />
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Grid
+                ColumnDefinitions="*,auto"
+                IsVisible="{Binding Source={Static constants:Preprocessor.USE_VERSION_0}, Converter={toolkit:InvertedBoolConverter}}"
+                RowDefinitions="auto,auto">
+                <horus:MaterialLabel
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HorizontalOptions="Fill"
+                    IsVisible="{Binding HasAnyComponent}"
+                    Text="{Static strings:AppStrings.ProductForm_Lbl_CapitalPrice}" />
+                <horus:MaterialLabel
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalTextAlignment="End"
+                    IsVisible="{Binding HasAnyComponent}"
+                    Text="{Binding CapitalPrice, FallbackValue=0}" />
+                <uranium:TextField
+                    Title="{Static strings:AppStrings.ProductForm_Lbl_CapitalPrice}"
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="{StaticResource CommonSpaceSmallBottom}"
+                    AllowClear="False"
+                    IsVisible="{Binding HasAnyComponent, Converter={toolkit:InvertedBoolConverter}}"
+                    Text="{Binding CapitalPrice, FallbackValue=0}">
+                    <uranium:TextField.Validations>
+                        <validations:NumericValidation />
+                    </uranium:TextField.Validations>
+                </uranium:TextField>
+                <horus:MaterialLabel
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    HorizontalOptions="Fill"
+                    Text="{Static strings:AppStrings.ProductForm_Lbl_Margin}" />
+                <horus:MaterialLabel
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalTextAlignment="End"
+                    Text="{Binding Margin, FallbackValue=0}" />
+            </Grid>
+
+            <Button
+                Margin="{StaticResource CommonSpaceMediumTop}"
+                inputkit:FormView.IsSubmitButton="True"
+                StyleClass="FilledButton"
+                Text="{Static strings:AppStrings.ProductForm_Btn_Save}" />
+        </inputkit:FormView>
+    </ScrollView>
+</ContentPage>

@@ -1,4 +1,4 @@
-﻿using JualIn.Domain.Common;
+﻿using JualIn.Domain.Common.Messaging;
 
 namespace JualIn.Domain.Account.Events
 {
