@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CommunityToolkit.Diagnostics;
 using JualIn.Domain.Catalogs.Events;
 using JualIn.Domain.Common.Entities;
 using JualIn.Domain.Common.ValueObjects;
+using JualIn.Domain.Sales.Entities;
 
 namespace JualIn.Domain.Catalogs.Entities
 {
@@ -30,9 +32,11 @@ namespace JualIn.Domain.Catalogs.Entities
 
         public IList<ProductComponent> Components { get; set; } = [];
 
-        public void Sell(int quantity)
+        public void ApplyOrder(OrderItem item)
         {
-            Stock.Decrease(quantity);
+            Guard.IsTrue(Id == item.Product?.Id, nameof(Id));
+
+            Stock.Decrease(item.Quantity);
             UpdatedAt = DateTime.UtcNow;
 
             if (Stock == 0)

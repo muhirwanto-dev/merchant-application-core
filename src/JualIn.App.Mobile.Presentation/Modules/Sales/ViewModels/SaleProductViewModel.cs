@@ -12,7 +12,7 @@ public partial class SaleProductViewModel(Product @entity) : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(OnCartTotalPrice))]
     [NotifyPropertyChangedFor(nameof(IsSelected))]
-    private double _onCartQuantity;
+    private int _onCartQuantity;
 
     public double OnCartTotalPrice => Entity.Price * OnCartQuantity;
 

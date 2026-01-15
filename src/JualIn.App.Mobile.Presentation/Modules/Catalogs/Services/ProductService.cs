@@ -1,17 +1,23 @@
 ﻿using CommunityToolkit.Diagnostics;
+using JualIn.App.Mobile.Presentation.Modules.Catalogs.Abstractions;
+using JualIn.App.Mobile.Presentation.Modules.Sales.Abstractions;
+using JualIn.Domain.Common.Messaging;
+using JualIn.Domain.Sales.Entities;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Services
 {
     public class ProductService(
         IOrderRepository _orderRepository,
-        IProductRepository _productRepository
+        IProductRepository _productRepository,
+        IDomainEventDispatcher _dispatcher
         ) : IProductService
     {
         public async Task UpdateStockAsync(string orderId, CancellationToken cancellationToken = default)
         {
             var now = DateTime.UtcNow;
             var order = await _orderRepository.FirstOrDefaultAsync(x => x.OrderId == orderId, cancellationToken)
-                ?? ThrowHelper.ThrowArgumentNullException<OrderDto>($"Order with id: {orderId} should be exist!");
+                ?? ThrowHelper.ThrowArgumentNullException<Order>($"Order with id: {orderId} should be exist!");
+            var events = new List<IDomainEvent>();
 
             foreach (var item in order.Items)
             {
@@ -23,14 +29,15 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Services
 
                 _productRepository.DetatchFromTracking(entity);
 
-                var product = new Product(entity);
+                entity.ApplyOrder(item);
 
-                product.ApplyOrder(item);
+                await _productRepository.UpdateAsync(entity, cancellationToken);
 
-                await _productRepository.UpdateAsync(product.Data, cancellationToken);
+                events.AddRange(entity.ConsumeEvents());
             }
 
             await _productRepository.SaveAsync(cancellationToken);
+            await _dispatcher.DispatchAsync(events, cancellationToken);
         }
     }
 }

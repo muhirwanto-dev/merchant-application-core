@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using CommunityToolkit.Maui.Converters;
+using JualIn.Domain.Payments.ValueObjects;
 using UraniumUI.Icons.MaterialSymbols;
 
 namespace JualIn.App.Mobile.Presentation.UI.Controls.Converters
@@ -10,13 +11,11 @@ namespace JualIn.App.Mobile.Presentation.UI.Controls.Converters
         public override string DefaultConvertReturnValue { get; set; } = string.Empty;
 
         public override string ConvertFrom(string value, CultureInfo? culture)
-            => Enum.TryParse<PaymentMethod>(value, out var method)
-                ? MapToString(method)
-                : DefaultConvertReturnValue;
+            => MapToString(PaymentMethod.FromValue(value));
 
-        protected string MapToString(PaymentMethod value) => value switch
+        protected static string MapToString(PaymentMethod value) => value.Name switch
         {
-            PaymentMethod.Cash => MaterialRounded.Money,
+            nameof(PaymentMethod.Cash) => MaterialRounded.Money,
             //PaymentMethod.CreditCard => MaterialRounded.Credit_card,
             //PaymentMethod.DebitCard => MaterialRounded.Credit_card,
             //PaymentMethod.EWallet => MaterialRounded.Wallet,

@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JualIn.App.Mobile.Presentation.Core.Extensions.SingleScope;
+using SingleScope.Mvvm.Abstractions;
 using SingleScope.Reporting.Abstractions;
 
 namespace JualIn.App.Mobile.Presentation.UI.Controls.Popups
@@ -10,7 +11,7 @@ namespace JualIn.App.Mobile.Presentation.UI.Controls.Popups
     public partial class FullScreenImagePopupViewModel(
         IReportingService _reporting,
         IPopupService _popupService
-        ) : ObservableObject
+        ) : ObservableObject, IViewModel
     {
         [ObservableProperty]
         private byte[]? _image;

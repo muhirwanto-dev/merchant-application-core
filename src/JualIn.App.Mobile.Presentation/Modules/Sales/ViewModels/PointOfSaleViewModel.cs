@@ -7,7 +7,12 @@ using JualIn.App.Mobile.Presentation.Infrastructure.Mapping;
 using JualIn.App.Mobile.Presentation.Modules.Sales.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.App.Mobile.Presentation.Shared.Filtering;
+using JualIn.App.Mobile.Presentation.Shared.Persistence;
 using JualIn.App.Mobile.Presentation.UI.Controls.Filtering;
+using JualIn.Domain.Catalogs.Entities;
+using JualIn.SharedLib;
+using SingleScope.Navigations.Maui.Models;
+using SingleScope.Persistence.Abstraction;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 {
@@ -16,8 +21,9 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
     {
         private static readonly CountableFilterViewModel<SaleProductViewModel> _defaultFilter = new(x => true, AppStrings.Common_Filter_All);
 
-        private readonly IReportingService<PointOfSaleViewModel> _reporting;
         private readonly IMapper _mapper;
+        private readonly IReadRepository<Product> _productRepository;
+        private readonly ISearchable<Product> _searchable;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(SearchSuggestions))]
@@ -35,11 +41,15 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
         public bool HasProductSelected => FilterGroup.FilteredItems.Any(x => x.IsSelected);
 
-        public PointOfSaleViewModel(IReportingService<PointOfSaleViewModel> reporting,
-            IMapper mapper)
+        public PointOfSaleViewModel(
+            IMapper mapper,
+            IReadRepository<Product> productRepository,
+            ISearchable<Product> searchable
+            )
         {
-            _reporting = reporting;
             _mapper = mapper;
+            _productRepository = productRepository;
+            _searchable = searchable;
 
             FilterGroup = new([_defaultFilter]);
             IsRefreshing = true;
@@ -99,10 +109,9 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         {
             try
             {
-                var repository = SingleScopeServiceProvider.Current.GetRequiredService<IProductRepository>();
-                var entities = await repository.SearchAsync(query);
+                var entities = await _searchable.SearchAsync(query);
 
-                SaleProducts = [.. entities.Select(_mapper.Map<ProductDto, SaleProductViewModel>)];
+                SaleProducts = [.. entities.Select(_mapper.Map<Product, SaleProductViewModel>)];
             }
             catch (Exception ex)
             {
@@ -150,7 +159,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         {
             try
             {
-                if (item.OnCartQuantity >= item.Entity.Stock)
+                if (item.OnCartQuantity >= item.Entity.Stock.Value)
                 {
                     Toast.Make(AppStrings.PointOfSalePage_Msg_ItemStockLimit).Show();
 
@@ -176,10 +185,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
             {
                 var selected = SaleProducts.Where(x => x.IsSelected);
 
-                await _navigation.NavigateToAsync<CheckoutPage>(new Dictionary<string, object>
-                {
-                    ["items"] = selected
-                });
+                await _navigation.NavigateToAsync<CheckoutPage>(ShellNavigationParams.Create(("items", selected)));
             }
             catch (Exception ex)
             {
@@ -187,7 +193,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
             }
         }
 
-        protected override void FetchData()
+        protected void FetchData()
         {
             Task.Run(async () =>
             {
@@ -208,15 +214,14 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
         private async Task LoadProductsAsync()
         {
-            var repository = SingleScopeServiceProvider.Current.GetRequiredService<IProductRepository>();
-            var productTable = await repository.GetAllAsync();
+            var productTable = await _productRepository.GetAllAsync();
 
             while (IsNavigating)
             {
                 await Waiting.One;
             }
 
-            var saleProducts = productTable.Select(_mapper.Map<ProductDto, SaleProductViewModel>);
+            var saleProducts = productTable.Select(_mapper.Map<Product, SaleProductViewModel>);
             var categories = saleProducts.Select(x => x.Entity.Category).Distinct();
 
             FilterGroup = new([

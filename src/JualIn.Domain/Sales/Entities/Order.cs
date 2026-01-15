@@ -28,6 +28,9 @@ namespace JualIn.Domain.Sales.Entities
         // final amount
         public double GrandTotal { get; set; }
 
+        [NotMapped]
+        public bool IsConfirmed => Status == OrderStatus.Confirmed;
+
         public ICollection<OrderItem> Items { get; set; } = [];
 
         public ICollection<OrderTransaction> Transactions { get; set; } = [];
@@ -61,6 +64,8 @@ namespace JualIn.Domain.Sales.Entities
         {
             Guard.IsGreaterThan(Items.Count, 0, nameof(Items));
 
+            Status = Status.Confirm();
+
             AddDomainEvent(new OrderConfirmedEvent(OrderId, paymentMethod));
         }
 
@@ -73,12 +78,12 @@ namespace JualIn.Domain.Sales.Entities
             }
         }
 
-        public void AddItemQuantity(long productId, double quantity)
+        public void AddItemQuantity(long productId, int quantity)
         {
             var item = Items.FirstOrDefault(i => i.Product?.Id == productId);
             if (item != null)
             {
-                double newQuantity = quantity + item.Quantity;
+                int newQuantity = quantity + item.Quantity;
 
                 Guard.IsLessThanOrEqualTo(newQuantity, item.Product!.Stock.Value, nameof(quantity));
                 Guard.IsGreaterThanOrEqualTo(newQuantity, 0, nameof(quantity));

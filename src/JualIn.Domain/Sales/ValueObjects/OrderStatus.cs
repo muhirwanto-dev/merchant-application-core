@@ -6,22 +6,22 @@ namespace JualIn.Domain.Sales.ValueObjects
     /// <summary>
     /// State transitions:
     /// 
-    /// Draft → Completed
+    /// Draft → Confirmed
     /// Draft → Cancelled
-    /// Completed → (no backward change)
+    /// Confirmed → (no backward change)
     /// </summary>
     public class OrderStatus(string name, int value)
         : SmartEnum<OrderStatus>(name, value)
     {
         public static readonly OrderStatus Draft = new(nameof(Draft), 0);
-        public static readonly OrderStatus Completed = new(nameof(Completed), 1);
+        public static readonly OrderStatus Confirmed = new(nameof(Confirmed), 1);
         public static readonly OrderStatus Canceled = new(nameof(Canceled), 2);
 
-        public OrderStatus Next()
+        public OrderStatus Confirm()
         {
             Guard.IsTrue(this == Draft);
 
-            return Completed;
+            return Confirmed;
         }
 
         public OrderStatus Cancel()

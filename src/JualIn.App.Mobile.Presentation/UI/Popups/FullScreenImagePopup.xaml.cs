@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Views;
+using SingleScope.Mvvm.Attributes;
 
 namespace JualIn.App.Mobile.Presentation.UI.Controls.Popups;
 

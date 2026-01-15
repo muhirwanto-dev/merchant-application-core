@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using CommunityToolkit.Maui.Converters;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
+using JualIn.Domain.Payments.ValueObjects;
 
 namespace JualIn.App.Mobile.Presentation.UI.Controls.Converters
 {
@@ -10,13 +11,11 @@ namespace JualIn.App.Mobile.Presentation.UI.Controls.Converters
         public override string DefaultConvertReturnValue { get; set; } = string.Empty;
 
         public override string ConvertFrom(string value, CultureInfo? culture)
-            => Enum.TryParse<PaymentMethod>(value, out var method)
-                ? MapToString(method)
-                : DefaultConvertReturnValue;
+            => MapToString(PaymentMethod.FromValue(value));
 
-        protected string MapToString(PaymentMethod value) => value switch
+        protected static string MapToString(PaymentMethod value) => value.Name switch
         {
-            PaymentMethod.Cash => AppStrings.PaymentMethod_Lbl_Cash,
+            nameof(PaymentMethod.Cash) => AppStrings.PaymentMethod_Lbl_Cash,
             //PaymentMethod.CreditCard => AppStrings.PaymentMethod_Lbl_CreditCard,
             //PaymentMethod.DebitCard => AppStrings.PaymentMethod_Lbl_DebitCard,
             //PaymentMethod.EWallet => AppStrings.PaymentMethod_Lbl_DebitCard,

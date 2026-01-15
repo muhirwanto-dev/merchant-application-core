@@ -11,7 +11,7 @@ namespace JualIn.Domain.Sales.Entities
 
         public long ProductId { get; set; }
 
-        public double Quantity { get; set; }
+        public int Quantity { get; set; }
 
         /// <summary>
         /// Base price per unit at time of sale (before discount & tax)

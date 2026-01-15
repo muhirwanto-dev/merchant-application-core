@@ -2,26 +2,34 @@
 using CommunityToolkit.Mvvm.Input;
 using JualIn.App.Mobile.Presentation.Core.Extensions.SingleScope;
 using JualIn.App.Mobile.Presentation.Core.ViewModels;
+using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
+using JualIn.Domain.Catalogs.Entities;
+using JualIn.Domain.Sales.Entities;
+using JualIn.SharedLib;
+using SingleScope.Navigations.Maui.Models;
+using SingleScope.Persistence.Abstraction;
 using SingleScope.Persistence.Specification;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 {
     public partial class OrderHistoryViewModel : BaseViewModel
     {
-        private readonly IReportingService<OrderHistoryViewModel> _reporting;
+        private readonly IReadRepository<Order> _orderRepository;
 
-        public ObservableCollection<OrderDto> Orders { get; } = [];
+        public ObservableCollection<Order> Orders { get; } = [];
 
-        public OrderHistoryViewModel(IReportingService<OrderHistoryViewModel> reporting)
+        public OrderHistoryViewModel(
+            IReadRepository<Order> orderRepository
+            )
         {
-            _reporting = reporting;
+            _orderRepository = orderRepository;
 
             RegisterInteractionCommand(nameof(IsNavigating), OpenOrderDetailCommand);
 
             IsRefreshing = true;
         }
 
-        protected override void FetchData()
+        protected void FetchData()
         {
             Task.Run(async () =>
             {
@@ -72,16 +80,13 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(CanNavigate))]
-        private async Task OpenOrderDetailAsync(ProductDto item)
+        private async Task OpenOrderDetailAsync(Product item)
         {
             using var _ = StartScopedNavigation();
 
             try
             {
-                //await _navigation.NavigateToAsync<ProductDetailPage>(new Dictionary<string, object>
-                //{
-                //    ["product"] = Products.First(x => x.Id == item.Id),
-                //});
+                await _navigation.NavigateToAsync<ProductDetailPage>(ShellNavigationParams.Create(("product", item)));
             }
             catch (Exception ex)
             {
@@ -91,8 +96,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
         private async Task LoadOrdersAsync()
         {
-            var repository = SingleScopeServiceProvider.Current.GetRequiredService<IReadRepository<OrderDto>>();
-            var stream = repository.StreamAllAsync(new IncludeSpecification<OrderDto>([x => x.Items, x => x.Transactions]));
+            var stream = _orderRepository.StreamAllAsync(new IncludeSpecification<Order>([x => x.Items, x => x.Transactions]));
 
             while (IsNavigating)
             {

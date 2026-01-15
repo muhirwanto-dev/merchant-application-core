@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Diagnostics;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels;
 using JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels;
+using JualIn.Domain.Catalogs.Entities;
 using JualIn.Domain.Inventories.Entities;
 using Riok.Mapperly.Abstractions;
 
