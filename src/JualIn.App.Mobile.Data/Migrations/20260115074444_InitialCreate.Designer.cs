@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JualIn.App.Mobile.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260110163743_InitialCreate")]
+    [Migration("20260115074444_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
 
             modelBuilder.Entity("JualIn.Domain.Account.Entities.ApplicationUser", b =>
                 {
@@ -424,8 +424,8 @@ namespace JualIn.App.Mobile.Data.Migrations
                     b.Property<long>("ProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("REAL");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("REAL");
@@ -488,10 +488,9 @@ namespace JualIn.App.Mobile.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TransactionType")
-                        .IsRequired()
+                    b.Property<int>("TransactionType")
                         .HasMaxLength(64)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");

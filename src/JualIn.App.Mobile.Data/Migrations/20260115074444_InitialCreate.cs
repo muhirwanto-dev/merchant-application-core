@@ -162,7 +162,7 @@ namespace JualIn.App.Mobile.Data.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TransactionId = table.Column<string>(type: "TEXT", maxLength: 128, nullable: false),
-                    TransactionType = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
+                    TransactionType = table.Column<int>(type: "INTEGER", maxLength: 64, nullable: false),
                     OrderId = table.Column<long>(type: "INTEGER", nullable: false),
                     IsConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
                     SettledAmount = table.Column<double>(type: "REAL", nullable: false),
@@ -191,7 +191,7 @@ namespace JualIn.App.Mobile.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderId = table.Column<long>(type: "INTEGER", nullable: false),
                     ProductId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Quantity = table.Column<double>(type: "REAL", nullable: false),
+                    Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     UnitPrice = table.Column<double>(type: "REAL", nullable: false),
                     UnitDiscount = table.Column<double>(type: "REAL", nullable: false),
                     UnitNetPrice = table.Column<double>(type: "REAL", nullable: false),

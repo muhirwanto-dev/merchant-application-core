@@ -54,29 +54,4 @@
 	  <ProjectReference Include="..\JualIn.SharedLib\JualIn.SharedLib.csproj" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UI\Popups\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Modules\Inventories\Views\InventoryDetailPage.xaml.cs">
-      <DependentUpon>InventoryDetailPage.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <MauiXaml Update="Modules\Auth\Views\SignInPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Dashboard\Views\DashboardPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Inventories\Views\InventoryDetailPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-    <MauiXaml Update="Modules\Inventories\Views\InventoryManagementPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </MauiXaml>
-  </ItemGroup>
-
 </Project>

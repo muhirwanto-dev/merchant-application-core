@@ -13,8 +13,7 @@
     xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels.Popups"
     xmlns:vm_shared="clr-namespace:JualIn.App.Mobile.Presentation.Shared.ViewModels"
     x:Name="root"
-    x:DataType="{x:Type vm:ProductComponentSelectionPopupViewModel}"
-    Color="Transparent">
+    x:DataType="{x:Type vm:ProductComponentSelectionPopupViewModel}">
     <Border
         Padding="{StaticResource AppLayoutPaddingDialog}"
         BackgroundColor="{AppThemeBinding Light={StaticResource Background},
