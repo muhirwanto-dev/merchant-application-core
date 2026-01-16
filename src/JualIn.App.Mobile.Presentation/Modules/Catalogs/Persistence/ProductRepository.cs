@@ -1,5 +1,6 @@
 ﻿using JualIn.App.Mobile.Data.Contexts;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Abstractions;
+using JualIn.App.Mobile.Presentation.Shared.Persistence;
 using JualIn.Domain.Catalogs.Entities;
 using Microsoft.EntityFrameworkCore;
 using SingleScope.Persistence.EFCore.Repositories;
@@ -7,13 +8,18 @@ using SingleScope.Persistence.EFCore.Repositories;
 namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Persistence
 {
     public class ProductRepository(AppDbContext context) : ReadWriteRepository<Product, AppDbContext>(context),
-        IProductRepository
+        IProductRepository, ISearchable<Product>
     {
         public Task<List<Product>> GetProductsWithComponentAsync(CancellationToken cancellationToken = default)
             => _set.AsNoTracking()
                 .Include(x => x.Components)
                 .ThenInclude(c => c.Inventory)
                 .ToListAsync(cancellationToken);
+
+        public Task<List<Product>> SearchAsync(string query, CancellationToken cancellationToken = default)
+            => string.IsNullOrEmpty(query)
+                ? GetAllAsync(cancellationToken)
+                : WhereAsync(x => EF.Functions.Like(x.Name, query), cancellationToken);
 
         public async Task UpdateComponentsAsync(long productId, IEnumerable<ProductComponent> components, CancellationToken cancellationToken = default)
         {
