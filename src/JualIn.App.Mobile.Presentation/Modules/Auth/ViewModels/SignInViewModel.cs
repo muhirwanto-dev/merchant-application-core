@@ -9,6 +9,7 @@ using JualIn.App.Mobile.Presentation.Modules.Dashboard.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.Contracts.Dtos.Auth.EmailSignIn;
 using SingleScope.Maui.Dialogs;
+using SingleScope.Maui.Loadings.Abstractions;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
 {
@@ -16,6 +17,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
     {
         private readonly IBackendApi _api;
         private readonly IAuthService _authService;
+        private readonly IProgressiveLoadingService _progressiveLoadingService;
 
         [ObservableProperty] private string? _email = "dummymail.general@gmail.com";
         [ObservableProperty] private string? _password = "LLAdortoh123!";
@@ -49,8 +51,8 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
         {
             try
             {
-                //using var _1 = StartScopedUserInteraction();
-                //using var _2 = _loadingService.Show();
+                using var _1 = StartScopedUserInteraction();
+                await using var _2 = _loadingService.ShowAsync(3000);
 
                 var response = await _api.SignInAsync(new EmailSignInRequestDto(Email!, Password!, RememberMe: false));
                 if (response.IsSuccessful && response.Content is EmailSignInResponseDto dto)
@@ -58,19 +60,21 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
                     if (!dto.IsEmailConfirmed)
                     {
                         await _dialogService.ShowAsync(Alert.Info(AppStrings.SignInPage_Msg_EmailNotConfirmed));
-                        return;
                     }
-
-                    await _authService.SaveSignInDataAsync(dto.UserIdentifier, dto.AccessToken, dto.RefreshToken, dto.Expiration);
-                    await Task.WhenAll([
-                            _authService.FetchUserDataAsync().AsTask(),
-                            _navigation.NavigateToRootAsync<DashboardPage>()
-                        ]);
+                    else
+                    {
+                        await _authService.SaveSignInDataAsync(dto.UserIdentifier, dto.AccessToken, dto.RefreshToken, dto.Expiration);
+                    }
                 }
                 else
                 {
                     await _dialogService.ShowInfoOrThrowAsync(response);
                 }
+
+                await Task.WhenAll([
+                    _authService.FetchUserDataAsync().AsTask(),
+                        _navigation.NavigateToRootAsync<DashboardPage>()
+                    ]);
             }
             catch (Exception ex)
             {

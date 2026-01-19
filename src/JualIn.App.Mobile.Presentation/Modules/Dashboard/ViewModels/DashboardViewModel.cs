@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JualIn.App.Mobile.Presentation.Core.Extensions.SingleScope;
 using JualIn.App.Mobile.Presentation.Core.ViewModels;
@@ -7,6 +8,7 @@ using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
 using JualIn.App.Mobile.Presentation.Modules.Sales.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.SharedLib;
+using SingleScope.Maui.Dialogs.Abstractions;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Dashboard.ViewModels
 {
@@ -49,7 +51,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Dashboard.ViewModels
         {
             try
             {
-                using var _ = _loadingService.Show();
+                await using var _ = _loadingService.ShowAsync(3000);
 
                 while (!_authService.HasUserData)
                 {

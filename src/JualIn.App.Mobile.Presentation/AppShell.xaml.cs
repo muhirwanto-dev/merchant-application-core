@@ -42,6 +42,11 @@ namespace JualIn.App.Mobile.Presentation
         {
             base.OnNavigating(args);
 
+            if (IsPopup(args.Current))
+            {
+                return;
+            }
+
             if (BottomTab?.CurrentItem?.CurrentItem is ShellContent tab)
             {
                 if (_tabIconMap.TryGetValue(tab.Route, out var icons))
@@ -55,6 +60,11 @@ namespace JualIn.App.Mobile.Presentation
         {
             base.OnNavigated(args);
 
+            if (IsPopup(args.Current))
+            {
+                return;
+            }
+
             if (BottomTab?.CurrentItem?.CurrentItem is ShellContent tab)
             {
                 if (_tabIconMap.TryGetValue(tab.Route, out var icons))
@@ -63,5 +73,8 @@ namespace JualIn.App.Mobile.Presentation
                 }
             }
         }
+
+        private static bool IsPopup(ShellNavigationState state) 
+            => state != null && state.Location.OriginalString.Contains("PopupPage", StringComparison.InvariantCultureIgnoreCase);
     }
 }

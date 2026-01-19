@@ -32,10 +32,14 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
         public FilterGroupState<InventoryViewModel> FilterGroup { get; }
 
         public InventoryManagementViewModel(
-            IMapper mapper
+            IMapper mapper,
+            IInventoryRepository inventoryRepository,
+            ISearchable<Inventory> searchable
             )
         {
             _mapper = mapper;
+            _inventoryRepository = inventoryRepository;
+            _searchable = searchable;
 
             IsRefreshing = true;
             FilterGroup = new([

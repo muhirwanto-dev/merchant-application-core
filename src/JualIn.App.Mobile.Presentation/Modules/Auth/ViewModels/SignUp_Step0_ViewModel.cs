@@ -42,7 +42,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
         {
             try
             {
-                using var _ = _loadingService.Show();
+                await using var _ = _loadingService.ShowAsync();
                 var response = await _api.CheckAvailabilityAsync(Email!);
 
                 if (response.IsSuccessful)

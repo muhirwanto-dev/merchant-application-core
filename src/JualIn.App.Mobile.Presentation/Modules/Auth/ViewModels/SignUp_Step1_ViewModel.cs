@@ -59,7 +59,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
                     return;
                 }
 
-                using var _ = _loadingService.Show();
+                await using var _ = _loadingService.ShowAsync();
                 var response = await _api.SignUpAsync(new EmailSignUpRequestDto(
                     Email!,
                     Password!,
