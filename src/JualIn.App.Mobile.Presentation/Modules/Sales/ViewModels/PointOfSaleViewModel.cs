@@ -10,7 +10,6 @@ using JualIn.App.Mobile.Presentation.Shared.Filtering;
 using JualIn.App.Mobile.Presentation.Shared.Persistence;
 using JualIn.App.Mobile.Presentation.UI.Controls.Filtering;
 using JualIn.Domain.Catalogs.Entities;
-using JualIn.SharedLib;
 using SingleScope.Navigations.Maui.Models;
 using SingleScope.Persistence.Abstraction;
 
@@ -218,7 +217,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
             while (IsNavigating)
             {
-                await Waiting.One;
+                await Task.Yield();
             }
 
             var saleProducts = productTable.Select(_mapper.Map<Product, SaleProductViewModel>);
@@ -234,7 +233,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
             while (!FilterGroup.IsFilterApplied)
             {
-                await Waiting.One;
+                await Task.Yield();
             }
 
             OnPropertyChanged(nameof(HasProductSelected));

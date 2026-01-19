@@ -5,7 +5,6 @@ using JualIn.App.Mobile.Presentation.Core.ViewModels;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
 using JualIn.Domain.Catalogs.Entities;
 using JualIn.Domain.Sales.Entities;
-using JualIn.SharedLib;
 using SingleScope.Navigations.Maui.Models;
 using SingleScope.Persistence.Abstraction;
 using SingleScope.Persistence.Specification;
@@ -100,7 +99,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
 
             while (IsNavigating)
             {
-                await Waiting.Moment;
+                await Task.Yield();
             }
 
             await MainThread.InvokeOnMainThreadAsync(Orders.Clear);

@@ -8,7 +8,6 @@ using JualIn.App.Mobile.Presentation.Infrastructure.Mapping;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Abstractions;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
 using JualIn.Domain.Catalogs.Entities;
-using JualIn.SharedLib;
 using JualIn.SharedLib.Extensions;
 using SingleScope.Navigations.Maui.Models;
 
@@ -162,7 +161,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
 
             while (IsNavigating)
             {
-                await Waiting.Moment;
+                await Task.Yield();
             }
 
             Products = productTable;

@@ -7,8 +7,10 @@
     xmlns:dashboard="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Dashboard.Views"
     xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
     xmlns:inventory="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.Views"
+    xmlns:local="clr-namespace:JualIn.App.Mobile.Presentation"
     xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="root"
     Title="JualIn.App"
     Shell.FlyoutBehavior="Flyout"
     Shell.ForegroundColor="{AppThemeBinding Light={StaticResource Primary},
@@ -22,7 +24,11 @@
     Shell.TitleColor="{AppThemeBinding Light={StaticResource Primary},
                                        Dark={StaticResource DarkPrimary}}">
     <Shell.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" StatusBarStyle="DarkContent" />
+        <toolkit:StatusBarBehavior
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type local:AppShell}}"
+            StatusBarColor="{AppThemeBinding Light={StaticResource Background},
+                                             Dark={StaticResource DarkBackground}}"
+            StatusBarStyle="DarkContent" />
     </Shell.Behaviors>
 
     <ShellContent

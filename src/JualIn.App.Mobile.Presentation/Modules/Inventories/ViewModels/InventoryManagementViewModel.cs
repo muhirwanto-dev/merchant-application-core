@@ -10,7 +10,6 @@ using JualIn.App.Mobile.Presentation.Shared.Filtering;
 using JualIn.App.Mobile.Presentation.Shared.Persistence;
 using JualIn.App.Mobile.Presentation.UI.Controls.Filtering;
 using JualIn.Domain.Inventories.Entities;
-using JualIn.SharedLib;
 using SingleScope.Navigations.Maui.Models;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
@@ -165,7 +164,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
 
                 while (!FilterGroup.IsFilterApplied)
                 {
-                    await Waiting.Moment;
+                    await Task.Yield();
                 }
             }
             catch (Exception ex)
@@ -205,7 +204,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
 
             while (IsNavigating)
             {
-                await Waiting.Moment;
+                await Task.Yield();
             }
 
             FilterGroup.WaitForFilterApplied();
@@ -213,7 +212,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
 
             while (!FilterGroup.IsFilterApplied)
             {
-                await Waiting.Moment;
+                await Task.Yield();
             }
         }
     }

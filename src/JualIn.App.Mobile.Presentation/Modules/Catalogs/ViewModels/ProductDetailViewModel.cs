@@ -10,7 +10,6 @@ using JualIn.App.Mobile.Presentation.Modules.Catalogs.Abstractions;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.App.Mobile.Presentation.UI.Controls.Popups;
-using JualIn.SharedLib;
 using SingleScope.Maui.Dialogs.Models;
 using SingleScope.Navigations.Maui.Models;
 
@@ -94,11 +93,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
 
                 using var _ = StartScopedNavigation();
 
-                await Task.WhenAll([
-                    Waiting.One,
-                    _productRepository.DeleteAsync(item.Entity.Id),
-                ]);
-
+                await _productRepository.DeleteAsync(item.Entity.Id);
                 await Task.WhenAll([
                     Toast.Make(AppStrings.ProductDetail_Msg_ProductDeleted).Show(),
                     _navigation.BackAsync(),

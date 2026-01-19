@@ -74,7 +74,7 @@ namespace JualIn.App.Mobile.Presentation
             }
         }
 
-        private static bool IsPopup(ShellNavigationState state) 
+        private static bool IsPopup(ShellNavigationState state)
             => state != null && state.Location.OriginalString.Contains("PopupPage", StringComparison.InvariantCultureIgnoreCase);
     }
 }

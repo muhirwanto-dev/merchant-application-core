@@ -9,7 +9,6 @@ using JualIn.App.Mobile.Presentation.Modules.Inventories.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
 using JualIn.App.Mobile.Presentation.UI.Controls.Popups;
 using JualIn.Domain.Inventories.Entities;
-using JualIn.SharedLib;
 using SingleScope.Maui.Dialogs.Models;
 using SingleScope.Navigations.Maui.Models;
 using SingleScope.Persistence.Abstraction;
@@ -82,11 +81,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
 
                 using var _ = StartScopedNavigation();
 
-                await Task.WhenAll([
-                    Waiting.One,
-                    _inventoryRepository.DeleteAsync(item.Entity.Id),
-                ]);
-
+                await _inventoryRepository.DeleteAsync(item.Entity.Id);
                 await Task.WhenAll([
                     Toast.Make(AppStrings.InventoryDetail_Msg_InventoryDeleted).Show(),
                     _navigation.BackAsync(ShellNavigationParams.Create(("refresh", true))),
