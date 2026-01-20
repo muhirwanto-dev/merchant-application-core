@@ -8,8 +8,14 @@ using SingleScope.Persistence.EFCore.Repositories;
 namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Persistence
 {
     public class ProductRepository(AppDbContext context) : ReadWriteRepository<Product, AppDbContext>(context),
-        IProductRepository, ISearchable<Product>
+        IProductRepository, ISearchable<Product>, ICategoryResolver<Product>
     {
+        public Task<string[]> GetCategoriesAsync(CancellationToken cancellationToken = default)
+            => _set.AsNoTracking()
+                .Select(x => x.Category)
+                .Distinct()
+                .ToArrayAsync(cancellationToken);
+
         public Task<List<Product>> GetProductsWithComponentAsync(CancellationToken cancellationToken = default)
             => _set.AsNoTracking()
                 .Include(x => x.Components)

@@ -94,6 +94,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
                 using var _ = StartScopedNavigation();
 
                 await _inventoryRepository.DeleteAsync(item.Entity.Id);
+                await _inventoryRepository.SaveAsync();
                 await Task.WhenAll([
                     Toast.Make(AppStrings.InventoryDetail_Msg_InventoryDeleted).Show(),
                     _navigation.BackAsync(ShellNavigationParams.Create(("refresh", true))),

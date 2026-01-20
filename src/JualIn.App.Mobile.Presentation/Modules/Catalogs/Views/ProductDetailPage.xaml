@@ -81,7 +81,7 @@
                                     <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Deployed_code}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
                                 </Border>
                                 <horus:MaterialLabel Text="{x:Static strings:AppStrings.ProductDetail_Lbl_Stock}" VerticalTextAlignment="Center" />
-                                <horus:MaterialLabel Style="{StaticResource ProductDetail_Property_Value}" Text="{Binding Product.Entity.Stock, TargetNullValue=-}" />
+                                <horus:MaterialLabel Style="{StaticResource ProductDetail_Property_Value}" Text="{Binding Product.Entity.Stock.Value, TargetNullValue=-}" />
                             </FlexLayout>
                             <FlexLayout JustifyContent="Start">
                                 <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
@@ -98,7 +98,7 @@
                                 <horus:MaterialLabel Style="{StaticResource ProductDetail_Property_Value}">
                                     <horus:MaterialLabel.FormattedText>
                                         <FormattedString>
-                                            <Span Text="{Binding Product.Entity.Stock}" />
+                                            <Span Text="{Binding Product.Entity.Stock.Value}" />
                                         </FormattedString>
                                     </horus:MaterialLabel.FormattedText>
                                 </horus:MaterialLabel>

@@ -9,18 +9,29 @@ using SingleScope.Reporting.Abstractions;
 
 namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels.Popups
 {
-    [QueryProperty(nameof(Inventories), "inventories")]
-    [QueryProperty(nameof(CurrentComponents), "components")]
     public partial class ProductComponentSelectionPopupViewModel(
         IReportingService _reporting,
         IPopupService _popupService
-        ) : ObservableRecipient, IViewModel
+        ) : ObservableRecipient, IViewModel, IQueryAttributable
     {
         [ObservableProperty]
         private IList<SelectableItemViewModel<InventoryViewModel>> _inventories = [];
 
         [ObservableProperty]
         private IList<ProductComponentViewModel> _currentComponents = [];
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query.TryGetValue("inventories", out var resi) && resi is IList<SelectableItemViewModel<InventoryViewModel>> inventories)
+            {
+                Inventories = inventories;
+            }
+
+            if (query.TryGetValue("components", out var resc) && resc is IList<ProductComponentViewModel> components)
+            {
+                CurrentComponents = components;
+            }
+        }
 
         [RelayCommand]
         private void Select(SelectableItemViewModel<InventoryViewModel> item)
