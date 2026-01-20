@@ -48,6 +48,11 @@ namespace JualIn.App.Mobile.Presentation
                 return;
             }
 
+            if (IsPopup(args.Target))
+            {
+                return;
+            }
+
             if (BottomTab?.CurrentItem?.CurrentItem is ShellContent tab)
             {
                 if (_tabIconMap.TryGetValue(tab.Route, out var icons))

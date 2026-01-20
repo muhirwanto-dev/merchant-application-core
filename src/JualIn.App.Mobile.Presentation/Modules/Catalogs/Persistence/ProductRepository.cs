@@ -50,7 +50,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Persistence
             }
             else
             {
-                DetatchFromTracking(entity);
+                DetatchFromTracking(existing);
 
                 entity.CreatedAt = existing.CreatedAt;
                 entity.UpdatedAt = DateTime.UtcNow;
