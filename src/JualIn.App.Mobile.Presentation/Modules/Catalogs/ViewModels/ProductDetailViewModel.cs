@@ -9,7 +9,9 @@ using JualIn.App.Mobile.Presentation.Infrastructure.Mapping;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Abstractions;
 using JualIn.App.Mobile.Presentation.Modules.Catalogs.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
+using JualIn.App.Mobile.Presentation.UI.Controls;
 using JualIn.App.Mobile.Presentation.UI.Controls.Popups;
+using Plugin.Maui.BottomSheet.Navigation;
 using SingleScope.Maui.Dialogs.Models;
 using SingleScope.Navigations.Maui.Models;
 
@@ -21,21 +23,24 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
         private readonly IMapper _mapper;
         private readonly IPopupService _popupService;
         private readonly IProductRepository _productRepository;
+        private readonly IBottomSheetNavigationService _bottomSheetNavigationService;
+
+        private static Func<object, Task>? _bottomOnEditAction;
+        private static Func<object, Task>? _bottomOnDeleteAction;
 
         [ObservableProperty]
         private ProductViewModel _product = default!;
 
-        [ObservableProperty]
-        private bool _isBottomSheetOpened = true;
-
         public ProductDetailViewModel(
             IMapper mapper,
             IPopupService popupService,
-            IProductRepository productRepository)
+            IProductRepository productRepository,
+            IBottomSheetNavigationService bottomSheetNavigationService)
         {
             _mapper = mapper;
             _popupService = popupService;
             _productRepository = productRepository;
+            _bottomSheetNavigationService = bottomSheetNavigationService;
         }
 
         [RelayCommand]
@@ -45,7 +50,16 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
             {
                 Guard.IsNotNull(Product);
 
-                IsBottomSheetOpened = true;
+                _bottomOnEditAction ??= item => EditItemCommand.ExecuteAsync((ProductViewModel)item);
+                _bottomOnDeleteAction ??= item => DeleteItemCommand.ExecuteAsync((ProductViewModel)item);
+
+                _bottomSheetNavigationService.NavigateToAsync<ItemDetailBottomViewModel>(nameof(ItemDetailBottom),
+                    new BottomSheetNavigationParameters
+                    {
+                        ["item"] = Product,
+                        ["onEdit"] = _bottomOnEditAction,
+                        ["onDelete"] = _bottomOnDeleteAction,
+                    });
             }
             catch (Exception ex)
             {
@@ -58,7 +72,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
         {
             try
             {
-                IsBottomSheetOpened = false;
+                _bottomSheetNavigationService.GoBackAsync();
             }
             catch (Exception ex)
             {

@@ -7,8 +7,10 @@ using JualIn.App.Mobile.Presentation.Core.Extensions.SingleScope;
 using JualIn.App.Mobile.Presentation.Core.ViewModels;
 using JualIn.App.Mobile.Presentation.Modules.Inventories.Views;
 using JualIn.App.Mobile.Presentation.Resources.Strings;
+using JualIn.App.Mobile.Presentation.UI.Controls;
 using JualIn.App.Mobile.Presentation.UI.Controls.Popups;
 using JualIn.Domain.Inventories.Entities;
+using Plugin.Maui.BottomSheet.Navigation;
 using SingleScope.Maui.Dialogs.Models;
 using SingleScope.Navigations.Maui.Models;
 using SingleScope.Persistence.Abstraction;
@@ -18,14 +20,15 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
     [QueryProperty(nameof(Inventory), "inventory")]
     public partial class InventoryDetailViewModel(
         IPopupService _popupService,
-        IReadWriteRepository<Inventory> _inventoryRepository
+        IReadWriteRepository<Inventory> _inventoryRepository,
+        IBottomSheetNavigationService _bottomSheetNavigationService
         ) : BaseViewModel
     {
-        [ObservableProperty]
-        private InventoryViewModel _inventory = default!;
+        private static Func<object, Task>? _bottomOnEditAction;
+        private static Func<object, Task>? _bottomOnDeleteAction;
 
         [ObservableProperty]
-        private bool _isBottomSheetOpened = true;
+        private InventoryViewModel _inventory = default!;
 
         [RelayCommand]
         private void Appearing()
@@ -34,7 +37,16 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
             {
                 Guard.IsNotNull(Inventory);
 
-                IsBottomSheetOpened = true;
+                _bottomOnEditAction ??= item => EditItemCommand.ExecuteAsync((InventoryViewModel)item);
+                _bottomOnDeleteAction ??= item => DeleteItemCommand.ExecuteAsync((InventoryViewModel)item);
+
+                _bottomSheetNavigationService.NavigateToAsync<ItemDetailBottomViewModel>(nameof(ItemDetailBottom),
+                    new BottomSheetNavigationParameters
+                    {
+                        ["item"] = Inventory,
+                        ["onEdit"] = _bottomOnEditAction,
+                        ["onDelete"] = _bottomOnDeleteAction,
+                    });
             }
             catch (Exception ex)
             {
@@ -47,7 +59,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
         {
             try
             {
-                IsBottomSheetOpened = false;
+                _bottomSheetNavigationService.GoBackAsync();
             }
             catch (Exception ex)
             {
