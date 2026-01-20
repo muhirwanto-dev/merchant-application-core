@@ -48,12 +48,13 @@ namespace JualIn.App.Mobile.Presentation.Modules.Dashboard.ViewModels
         {
             try
             {
-                await using var _ = _loadingService.ShowAsync();
-
-                while (!_authService.HasUserData)
+                await _loadingService.ShowForAsync(async ct =>
                 {
-                    await Task.Yield();
-                }
+                    while (!_authService.HasUserData)
+                    {
+                        await Task.Yield();
+                    }
+                });
 
                 OnPropertyChanged(nameof(FullName));
             }

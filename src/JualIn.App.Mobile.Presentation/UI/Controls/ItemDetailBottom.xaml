@@ -15,15 +15,14 @@
         IsDraggable="False"
         IsModal="False"
         IsOpen="{Binding IsBottomSheetOpened}"
+        PeekHeight="{lucacivale:PeekView BottomSheetContent}"
         ShowHeader="False"
         States="Peek">
         <lucacivale:BottomSheet.Content>
             <lucacivale:BottomSheetContent>
                 <ContentView>
-                    <ContentView.Behaviors>
-                        <lucacivale:BottomSheetPeekBehavior />
-                    </ContentView.Behaviors>
                     <Grid
+                        x:Name="BottomSheetContent"
                         Margin="25,25,25,0"
                         ColumnDefinitions="*,*"
                         ColumnSpacing="{StaticResource CommonSpaceBetweenSmall}"

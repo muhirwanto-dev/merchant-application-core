@@ -174,41 +174,38 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
         }
 
         [RelayCommand]
-        private void Refresh()
+        private async Task RefreshAsync()
         {
-            FetchData();
-        }
-
-        protected void FetchData()
-        {
-            Task.Run(async () =>
+            try
             {
-                try
-                {
-                    await LoadInventoriesAsync();
-                }
-                catch (Exception ex)
-                {
-                    _reporting.ReportProblems(ex);
-                }
-                finally
-                {
-                    await MainThread.InvokeOnMainThreadAsync(() => IsRefreshing = false);
-                }
-            });
+                await Task.Yield();
+                await LoadInventoriesAsync();
+            }
+            catch (Exception ex)
+            {
+                _reporting.ReportProblems(ex);
+            }
+            finally
+            {
+                await MainThread.InvokeOnMainThreadAsync(() => IsRefreshing = false);
+            }
         }
 
         private async Task LoadInventoriesAsync()
         {
-            var inventoryTable = await _inventoryRepository.GetAllAsync();
-
-            while (IsNavigating)
+            var repositoryTask = _inventoryRepository.GetAllAsync();
+            var navigatingTask = Task.Run(async () =>
             {
-                await Task.Yield();
-            }
+                while (IsNavigating)
+                {
+                    await Task.Yield();
+                }
+            });
+
+            await Task.WhenAll(repositoryTask, navigatingTask);
 
             FilterGroup.WaitForFilterApplied();
-            Inventories = [.. inventoryTable.Select(_mapper.Map<Inventory, InventoryViewModel>)];
+            Inventories = [.. repositoryTask.Result.Select(_mapper.Map<Inventory, InventoryViewModel>)];
 
             while (!FilterGroup.IsFilterApplied)
             {

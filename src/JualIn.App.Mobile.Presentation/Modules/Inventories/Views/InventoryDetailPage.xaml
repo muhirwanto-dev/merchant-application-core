@@ -3,124 +3,301 @@
     x:Class="JualIn.App.Mobile.Presentation.Modules.Inventories.Views.InventoryDetailPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:constants="clr-namespace:JualIn.App.Mobile.Presentation.Shared.Constants"
     xmlns:controls="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls"
-    xmlns:controls_filtering="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Filtering"
-    xmlns:converters="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Converters"
+    xmlns:converters="clr-namespace:CommunityToolkit.Maui.Converters;assembly=CommunityToolkit.Maui"
     xmlns:horus="clr-namespace:HorusStudio.Maui.MaterialDesignControls;assembly=HorusStudio.Maui.MaterialDesignControls"
     xmlns:icons="clr-namespace:UraniumUI.Icons.MaterialSymbols;assembly=UraniumUI.Icons.MaterialSymbols"
-    xmlns:layouts="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.Views.Layouts"
     xmlns:pages="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.Views"
     xmlns:strings="clr-namespace:JualIn.App.Mobile.Presentation.Resources.Strings"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels"
-    xmlns:vm_filtering="clr-namespace:JualIn.App.Mobile.Presentation.UI.Controls.Filtering"
     x:Name="root"
-    Title="{Static strings:AppStrings.InventoryManagementPage_Lbl_PageTitle}"
-    x:DataType="{x:Type vm:InventoryManagementViewModel}">
+    Title="{x:Static strings:AppStrings.InventoryDetail_Lbl_PageTitle}"
+    x:DataType="{x:Type vm:InventoryDetailViewModel}"
+    Shell.NavBarIsVisible="False"
+    Shell.TabBarIsVisible="False">
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior
-            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:InventoryManagementPage}}"
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:InventoryDetailPage}}"
             Command="{Binding AppearingCommand}"
             EventName="Appearing" />
         <toolkit:EventToCommandBehavior
-            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:InventoryManagementPage}}"
-            Command="{Binding NavigatedToCommand}"
-            EventName="NavigatedTo" />
+            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type pages:InventoryDetailPage}}"
+            Command="{Binding DisappearingCommand}"
+            EventName="Disappearing" />
     </ContentPage.Behaviors>
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem
-            Command="{Binding OpenScannerCommand}"
-            IconImageSource="{FontImageSource FontFamily=MaterialRounded,
-                                              Glyph={Static icons:MaterialRounded.Upload_file},
-                                              Size={StaticResource IconSizeSmall},
-                                              Color={AppThemeBinding Light={StaticResource Primary},
-                                                                     Dark={StaticResource DarkPrimary}}}"
-            Order="Primary"
-            Text="{Static strings:AppStrings.InventoryManagementPage_Btn_Import}" />
-    </ContentPage.ToolbarItems>
-
-    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-        <ScrollView>
-            <VerticalStackLayout
-                Margin="{StaticResource AppLayoutPadding}"
-                HorizontalOptions="Fill"
-                Spacing="{StaticResource CommonSpaceBetweenSmall}">
-                <Grid ColumnDefinitions="*,auto" ColumnSpacing="{StaticResource CommonSpaceBetweenMicro}">
-                    <controls:AppSearchBar Grid.Column="0" HorizontalOptions="Fill" />
-                    <horus:MaterialIconButton
-                        Grid.Column="1"
-                        Margin="{StaticResource CommonSpaceMicroTop}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceVariant},
-                                                          Dark={StaticResource DarkSurfaceVariant}}"
-                        Command="{Binding OpenScannerCommand}"
-                        CornerRadius="{StaticResource CornerRadiusSmallInt}"
-                        HeightRequest="{StaticResource AutocompleteHeight}"
-                        IconTintColor="{AppThemeBinding Light={StaticResource OnSurfaceVariant},
-                                                        Dark={StaticResource DarkOnSurfaceVariant}}"
-                        ImageSource="{FontImageSource FontFamily=MaterialRounded,
-                                                      Glyph={Static icons:MaterialRounded.Barcode_scanner},
-                                                      Size={StaticResource IconSizeSmall}}"
-                        IsVisible="{Binding Source={Static constants:Preprocessor.USE_VERSION_0}, Converter={toolkit:InvertedBoolConverter}}"
-                        Type="Filled"
-                        VerticalOptions="Center"
-                        WidthRequest="{StaticResource AutocompleteHeight}" />
-                </Grid>
-
-                <FlexLayout
-                    horus:MaterialViewGroup.GroupName="FilterChipsGroup"
-                    horus:MaterialViewGroup.SelectedValueChangedCommand="{Binding FilterGroup.SelectedFilterChangeCommand}"
-                    horus:MaterialViewGroup.SelectionType="Single"
-                    BindableLayout.ItemsSource="{Binding FilterGroup.FilterStates}"
-                    Direction="Row"
-                    JustifyContent="Start"
-                    Wrap="Wrap">
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type vm_filtering:CountableFilterViewModel`1}">
-                            <controls_filtering:CountableFilter
-                                Margin="{StaticResource CommonSpaceNanoAll}"
-                                BindingContext="{Binding .}"
-                                FontSize="{StaticResource FontSizeShrink1}" />
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                    <BindableLayout.EmptyView>
-                        <horus:MaterialLabel Text="No filter data" />
-                    </BindableLayout.EmptyView>
-                </FlexLayout>
-
-                <Grid RowDefinitions="auto,auto" RowSpacing="{StaticResource CommonSpaceBetweenSmall}">
-                    <FlexLayout Grid.Row="0" JustifyContent="SpaceBetween">
-                        <horus:MaterialButton
-                            Command="{Binding OpenAddInventoryCommand}"
-                            HeightRequest="{StaticResource SmallButtonSize}"
+    <Grid>
+        <ScrollView Margin="{StaticResource ItemDetailBottomMargin}">
+            <Grid RowDefinitions="auto,auto">
+                <Border
+                    Grid.Row="0"
+                    HeightRequest="{StaticResource InventoryDetailImageHeight}"
+                    StrokeShape="{RoundRectangle CornerRadius='0,0,12,12',
+                                                 BackgroundColor={AppThemeBinding Light={StaticResource Outline},
+                                                                                  Dark={StaticResource DarkOutline}}}"
+                    StrokeThickness="0">
+                    <Grid>
+                        <Image
+                            Aspect="AspectFill"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryContainer},
+                                                              Dark={StaticResource DarkPrimaryContainer}}"
+                            Source="{Binding Inventory.Entity.Image, Converter={toolkit:ByteArrayToImageSourceConverter}, TargetNullValue={FileImageSource File=img_dummy_product}}">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenFullScreenImageCommand}" />
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Border
+                            Margin="{StaticResource CommonSpaceSmallAll}"
+                            Padding="15,5"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource SecondaryFixedDim},
+                                                              Dark={StaticResource DarkSecondaryFixedDim}}"
                             HorizontalOptions="End"
-                            ImageSource="{FontImageSource FontFamily=MaterialRounded,
-                                                          Glyph={x:Static icons:MaterialRounded.Add},
-                                                          Size={StaticResource IconSizeMicro},
-                                                          Color={AppThemeBinding Light={StaticResource OnPrimary},
-                                                                                 Dark={StaticResource DarkOnPrimary}}}"
-                            Text="{Static strings:AppStrings.Common_Btn_AddItem}" />
+                            StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusSmall}}"
+                            StrokeThickness="0"
+                            VerticalOptions="End">
+                            <horus:MaterialLabel
+                                HorizontalOptions="Center"
+                                Shadow="{Shadow Radius=0}"
+                                Text="{Binding Inventory.Entity.Category}"
+                                TextColor="{AppThemeBinding Light={StaticResource OnSecondaryFixedVariant},
+                                                            Dark={StaticResource DarkOnSecondaryFixedVariant}}" />
+                        </Border>
 
+                    </Grid>
+                </Border>
+
+                <VerticalStackLayout
+                    Grid.Row="1"
+                    Margin="{StaticResource AppLayoutPadding}"
+                    HorizontalOptions="Fill"
+                    Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                    <horus:MaterialLabel
+                        Margin="{StaticResource CommonSpaceMediumTop}"
+                        HorizontalOptions="Center"
+                        LineBreakMode="TailTruncation"
+                        Text="{Binding Inventory.Entity.Name}"
+                        Type="TitleLarge" />
+
+                    <Border
+                        Padding="{StaticResource CommonSpaceMicroX}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceDim},
+                                                          Dark={StaticResource DarkSurfaceDim}}"
+                        HorizontalOptions="Center"
+                        IsVisible="{Binding Inventory.Entity.BatchNumber, Converter={toolkit:IsNotNullConverter}}">
+                        <horus:MaterialLabel
+                            HorizontalTextAlignment="End"
+                            Type="LabelSmall"
+                            VerticalOptions="Start">
+                            <horus:MaterialLabel.FormattedText>
+                                <FormattedString>
+                                    <Span Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_BatchNumber}" />
+                                    <Span Text="{Binding Inventory.Entity.BatchNumber}" />
+                                </FormattedString>
+                            </horus:MaterialLabel.FormattedText>
+                        </horus:MaterialLabel>
+                    </Border>
+
+                    <horus:MaterialLabel
+                        Margin="{StaticResource CommonSpaceSmallTop}"
+                        HorizontalOptions="Center"
+                        Text="{Binding Inventory.Entity.Description, TargetNullValue={x:Static strings:AppStrings.Common_Lbl_NoDescription}}" />
+
+                    <FlexLayout HorizontalOptions="Center" JustifyContent="SpaceAround">
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource ErrorContainer}, Dark={StaticResource DarkErrorContainer}}" Style="{StaticResource InventoryDetail_Highlight}">
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Warning}, Color={AppThemeBinding Light={StaticResource OnErrorContainer}, Dark={StaticResource DarkOnErrorContainer}}}" />
+                                <horus:MaterialLabel
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Center"
+                                    Type="BodyMedium">
+                                    <horus:MaterialLabel.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Inventory.Entity.ExpirationDate, StringFormat='{} {0:dd-MM-yy}', TargetNullValue=-}" TextColor="{AppThemeBinding Light={StaticResource OnErrorContainer}, Dark={StaticResource DarkOnErrorContainer}}" />
+                                        </FormattedString>
+                                    </horus:MaterialLabel.FormattedText>
+                                </horus:MaterialLabel>
+                                <horus:MaterialLabel
+                                    HorizontalOptions="Center"
+                                    Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_ExpiredDate_Short}"
+                                    TextColor="{AppThemeBinding Light={StaticResource OnErrorContainer},
+                                                                Dark={StaticResource DarkOnErrorContainer}}"
+                                    Type="BodySmall" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource SecondaryFixedDim}, Dark={StaticResource DarkSecondaryFixedDim}}" Style="{StaticResource InventoryDetail_Highlight}">
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Deployed_code}, Color={AppThemeBinding Light={StaticResource OnSecondaryFixedVariant}, Dark={StaticResource DarkOnSecondaryFixedVariant}}}" />
+                                <horus:MaterialLabel
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Center"
+                                    Type="BodyMedium">
+                                    <horus:MaterialLabel.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Inventory.Entity.Stock.Value}" TextColor="{AppThemeBinding Light={StaticResource OnSecondaryFixedVariant}, Dark={StaticResource DarkOnSecondaryFixedVariant}}" />
+                                            <Span Text="{Binding Inventory.Entity.StockUnit.Value, StringFormat='{} {0}'}" TextColor="{AppThemeBinding Light={StaticResource OnSecondaryFixedVariant}, Dark={StaticResource DarkOnSecondaryFixedVariant}}" />
+                                        </FormattedString>
+                                    </horus:MaterialLabel.FormattedText>
+                                </horus:MaterialLabel>
+                                <horus:MaterialLabel
+                                    HorizontalOptions="Center"
+                                    Text="{x:Static strings:AppStrings.Inventory_Lbl_Stock}"
+                                    TextColor="{AppThemeBinding Light={StaticResource OnSecondaryFixedVariant},
+                                                                Dark={StaticResource DarkOnSecondaryFixedVariant}}"
+                                    Type="BodySmall" />
+                            </VerticalStackLayout>
+                        </Border>
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource TertiaryFixedDim}, Dark={StaticResource DarkTertiaryFixedDim}}" Style="{StaticResource InventoryDetail_Highlight}">
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Deployed_code_alert}, Color={AppThemeBinding Light={StaticResource OnTertiaryFixedVariant}, Dark={StaticResource DarkOnTertiaryFixedVariant}}}" />
+                                <horus:MaterialLabel
+                                    FontAttributes="Bold"
+                                    HorizontalOptions="Center"
+                                    Type="BodyMedium">
+                                    <horus:MaterialLabel.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Inventory.Entity.StockThreshold, TargetNullValue=-}" TextColor="{AppThemeBinding Light={StaticResource OnTertiaryFixedVariant}, Dark={StaticResource DarkOnTertiaryFixedVariant}}" />
+                                        </FormattedString>
+                                    </horus:MaterialLabel.FormattedText>
+                                </horus:MaterialLabel>
+                                <horus:MaterialLabel
+                                    HorizontalOptions="Center"
+                                    LineBreakMode="WordWrap"
+                                    Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_StockThreshold_Short}"
+                                    TextColor="{AppThemeBinding Light={StaticResource OnTertiaryFixedVariant},
+                                                                Dark={StaticResource DarkOnTertiaryFixedVariant}}"
+                                    Type="BodySmall" />
+                            </VerticalStackLayout>
+                        </Border>
                     </FlexLayout>
 
-                    <VerticalStackLayout
-                        Grid.Row="1"
-                        BindableLayout.ItemsSource="{Binding FilterGroup.FilteredItems}"
-                        Spacing="{StaticResource CommonSpaceBetweenMicro}">
-                        <BindableLayout.EmptyView>
-                            <horus:MaterialLabel Text="{Static strings:AppStrings.Common_Lbl_NoItems}" />
-                        </BindableLayout.EmptyView>
-                        <BindableLayout.ItemTemplate>
-                            <DataTemplate>
-                                <layouts:InventorySummaryItemView />
-                            </DataTemplate>
-                        </BindableLayout.ItemTemplate>
-                    </VerticalStackLayout>
-                </Grid>
+                    <Border
+                        Margin="{StaticResource CommonSpaceMicroY}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource ErrorContainer},
+                                                          Dark={StaticResource DarkErrorContainer}}"
+                        IsVisible="{Binding Inventory.IsLowStock}"
+                        StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusSmall}}"
+                        StrokeThickness="0">
+                        <HorizontalStackLayout
+                            Padding="{StaticResource CommonSpaceMediumAll}"
+                            HorizontalOptions="Center"
+                            Spacing="{StaticResource CommonSpaceBetweenSmall}">
+                            <Image Source="ic_alert.png" />
+                            <horus:MaterialLabel
+                                Text="{x:Static strings:AppStrings.InventoryDetail_Msg_StockThresholdExceed}"
+                                TextColor="{AppThemeBinding Light={StaticResource OnErrorContainer},
+                                                            Dark={StaticResource DarkOnErrorContainer}}"
+                                VerticalTextAlignment="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
 
-                <horus:MaterialProgressIndicator IsVisible="{Binding IsRefreshing}" />
-            </VerticalStackLayout>
+                    <horus:MaterialDivider Margin="{StaticResource CommonSpaceMediumY}" />
+
+                    <Border
+                        Padding="{StaticResource CommonSpaceMediumAll}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceBright},
+                                                          Dark={StaticResource DarkSurfaceBright}}"
+                        StrokeShape="{RoundRectangle CornerRadius={StaticResource MaterialCornerRadiusMedium}}">
+                        <VerticalStackLayout Spacing="{StaticResource CommonSpaceBetweenMicro}">
+                            <horus:MaterialLabel
+                                Margin="{StaticResource CommonSpaceMediumBottom}"
+                                HorizontalOptions="Start"
+                                Text="{Binding Inventory.Entity.InventoryId}"
+                                Type="LabelLarge" />
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Numbers}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_Sku}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.Sku, TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Numbers}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_Upc}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.Upc, TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Attach_money}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_Price}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.UnitPrice, StringFormat='{0:C0}', TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Deployed_code}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_Stock}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}">
+                                    <horus:MaterialLabel.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Inventory.Entity.Stock.Value}" />
+                                            <Span Text="{Binding Inventory.Entity.StockUnit.Value, StringFormat='{} {0}'}" />
+                                        </FormattedString>
+                                    </horus:MaterialLabel.FormattedText>
+                                </horus:MaterialLabel>
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Deployed_code_alert}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_StockThreshold}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}">
+                                    <horus:MaterialLabel.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding Inventory.Entity.StockThreshold, TargetNullValue=-}" TextColor="{AppThemeBinding Light={StaticResource OnTertiaryFixedVariant}, Dark={StaticResource DarkOnTertiaryFixedVariant}}" />
+                                        </FormattedString>
+                                    </horus:MaterialLabel.FormattedText>
+                                </horus:MaterialLabel>
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Local_shipping}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_Supplier}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.SupplierName, TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Calendar_month}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_PurchaseDate}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.PurchaseDate, StringFormat='{} {0:dd MMM yyyy}', TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Update}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_LastStockUpdate}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.LastStockUpdate, StringFormat='{} {0:dd MMM yyyy}', TargetNullValue=-}" />
+                            </FlexLayout>
+                            <FlexLayout JustifyContent="Start">
+                                <Border Style="{StaticResource InventoryDetail_Property_IconContainer}">
+                                    <Image Source="{FontImageSource FontFamily=MaterialRounded, Glyph={x:Static icons:MaterialRounded.Warning}, Color={AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}}" />
+                                </Border>
+                                <horus:MaterialLabel Text="{x:Static strings:AppStrings.InventoryDetail_Lbl_ExpiredDate}" VerticalTextAlignment="Center" />
+                                <horus:MaterialLabel Style="{StaticResource InventoryDetail_Property_Value}" Text="{Binding Inventory.Entity.ExpirationDate, StringFormat='{} {0:dd MMM yyyy}', TargetNullValue=-}" />
+                            </FlexLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
         </ScrollView>
-    </RefreshView>
+
+        <controls:ItemDetailBottom Item="{Binding Inventory}" />
+
+        <horus:MaterialIconButton
+            Margin="{StaticResource CustomNavbarMargin}"
+            BackgroundColor="{AppThemeBinding Light={StaticResource Surface},
+                                              Dark={StaticResource DarkSurface}}"
+            Command="{Binding BackButtonCommand}"
+            HorizontalOptions="Start"
+            IconTintColor="{AppThemeBinding Light={StaticResource Primary},
+                                            Dark={StaticResource DarkPrimary}}"
+            ImageSource="{FontImageSource FontFamily=MaterialRounded,
+                                          Glyph={Static icons:MaterialRounded.Arrow_back}}"
+            Type="Filled" />
+    </Grid>
 </ContentPage>

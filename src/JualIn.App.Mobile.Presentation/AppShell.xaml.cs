@@ -42,7 +42,8 @@ namespace JualIn.App.Mobile.Presentation
         {
             base.OnNavigating(args);
 
-            if (IsPopup(args.Current))
+            if (args.Current != null
+                && args.Current.Location.OriginalString.Equals(args.Target.Location.OriginalString, StringComparison.InvariantCultureIgnoreCase))
             {
                 return;
             }
@@ -59,11 +60,6 @@ namespace JualIn.App.Mobile.Presentation
         protected override void OnNavigated(ShellNavigatedEventArgs args)
         {
             base.OnNavigated(args);
-
-            if (IsPopup(args.Current))
-            {
-                return;
-            }
 
             if (BottomTab?.CurrentItem?.CurrentItem is ShellContent tab)
             {

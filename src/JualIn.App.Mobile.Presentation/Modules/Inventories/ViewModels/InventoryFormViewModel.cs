@@ -83,11 +83,13 @@ namespace JualIn.App.Mobile.Presentation.Modules.Inventories.ViewModels
 
         public InventoryFormViewModel(
             IMapper mapper,
-            IInventoryRepository inventoryRepository
+            IInventoryRepository inventoryRepository,
+            ICategoryResolver<Inventory> categoryResolver
             )
         {
             _mapper = mapper;
             _inventoryRepository = inventoryRepository;
+            _categoryResolver = categoryResolver;
 
             RegisterInteractionCommand(nameof(IsUserInteraction), SaveCommand);
             RegisterInteractionCommand(nameof(IsUserInteraction), SelectImageCommand);

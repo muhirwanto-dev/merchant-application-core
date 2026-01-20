@@ -73,8 +73,8 @@
                     <FormattedString>
                         <Span Text="{Static strings:AppStrings.Inventory_Lbl_Stock}" />
                         <Span Text=":" />
-                        <Span Text="{Binding Entity.Stock, StringFormat='{} {0}'}" />
-                        <Span Text="{Binding Entity.StockUnit, StringFormat='{} {0}'}" />
+                        <Span Text="{Binding Entity.Stock.Value, StringFormat='{} {0}'}" />
+                        <Span Text="{Binding Entity.StockUnit.Value, StringFormat='{} {0}'}" />
                     </FormattedString>
                 </horus:MaterialLabel.FormattedText>
             </horus:MaterialLabel>
