@@ -24,11 +24,7 @@
     Shell.TitleColor="{AppThemeBinding Light={StaticResource Primary},
                                        Dark={StaticResource DarkPrimary}}">
     <Shell.Behaviors>
-        <toolkit:StatusBarBehavior
-            BindingContext="{Binding Path=BindingContext, Source={x:Reference root}, x:DataType={x:Type local:AppShell}}"
-            StatusBarColor="{AppThemeBinding Light={StaticResource Background},
-                                             Dark={StaticResource DarkBackground}}"
-            StatusBarStyle="DarkContent" />
+        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" StatusBarStyle="DarkContent" />
     </Shell.Behaviors>
 
     <ShellContent
