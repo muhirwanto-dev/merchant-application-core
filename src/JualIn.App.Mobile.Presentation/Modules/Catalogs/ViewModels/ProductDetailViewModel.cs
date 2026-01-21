@@ -108,6 +108,8 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
                 using var _ = StartScopedNavigation();
 
                 await _productRepository.DeleteAsync(item.Entity.Id);
+                await _productRepository.SaveAsync();
+
                 await Task.WhenAll([
                     Toast.Make(AppStrings.ProductDetail_Msg_ProductDeleted).Show(),
                     _navigation.BackAsync(),
