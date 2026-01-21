@@ -38,6 +38,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.Persistence
             });
             var toAdd = components.Except(linked).Select(x =>
             {
+                x.ProductId = productId;
                 x.Inventory = null;
                 x.Product = null;
                 return x;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<toolkit:Popup
+<ContentView
     x:Class="JualIn.App.Mobile.Presentation.Modules.Catalogs.Views.Popups.ProductComponentSelectionPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -13,7 +13,8 @@
     xmlns:vm="clr-namespace:JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels.Popups"
     xmlns:vm_shared="clr-namespace:JualIn.App.Mobile.Presentation.Shared.ViewModels"
     x:Name="root"
-    x:DataType="{x:Type vm:ProductComponentSelectionPopupViewModel}">
+    x:DataType="{x:Type vm:ProductComponentSelectionPopupViewModel}"
+    BackgroundColor="Transparent">
     <Border
         Padding="{StaticResource AppLayoutPaddingDialog}"
         BackgroundColor="{AppThemeBinding Light={StaticResource Background},
@@ -69,4 +70,4 @@
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </Border>
-</toolkit:Popup>
+</ContentView>

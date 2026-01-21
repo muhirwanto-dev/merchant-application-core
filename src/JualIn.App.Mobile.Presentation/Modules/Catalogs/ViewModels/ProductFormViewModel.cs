@@ -154,6 +154,8 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
                 dto.Components = [];
 
                 await _productRepository.UpsertAsync(dto);
+                await _productRepository.SaveAsync(); // save to update Id
+                
                 await _productRepository.UpdateComponentsAsync(dto.Id, components);
                 await _productRepository.SaveAsync();
 
@@ -195,8 +197,14 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
 
                 await _loadingService.ShowForAsync(async ct => await inventoryTask);
 
-                var result = await _popupService.ShowPopupAsync<ProductComponentSelectionPopupViewModel>(Shell.Current,
-                    options: null,
+                var result = await _popupService.ShowPopupAsync<ProductComponentSelectionPopupViewModel, List<ProductComponentViewModel>>(
+                    Shell.Current,
+                    options: new PopupOptions
+                    {
+                        CanBeDismissedByTappingOutsideOfPopup = true,
+                        Shadow = null,
+                        Shape = null
+                    },
                     shellParameters: new Dictionary<string, object>
                     {
                         ["components"] = ProductComponents,
@@ -207,7 +215,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
                     });
 
                 // cancelled
-                if (result is not IEnumerable<ProductComponentViewModel> selected)
+                if (result.Result is not IEnumerable<ProductComponentViewModel> selected)
                 {
                     return;
                 }
