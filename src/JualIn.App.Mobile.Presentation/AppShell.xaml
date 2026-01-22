@@ -23,9 +23,9 @@
                                                   Dark={StaticResource DarkOutline}}"
     Shell.TitleColor="{AppThemeBinding Light={StaticResource Primary},
                                        Dark={StaticResource DarkPrimary}}">
-    <Shell.Behaviors>
+    <!--<Shell.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource DarkBackground}}" StatusBarStyle="DarkContent" />
-    </Shell.Behaviors>
+    </Shell.Behaviors>-->
 
     <ShellContent
         Title="SignIn"

@@ -155,7 +155,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Catalogs.ViewModels
 
                 await _productRepository.UpsertAsync(dto);
                 await _productRepository.SaveAsync(); // save to update Id
-                
+
                 await _productRepository.UpdateComponentsAsync(dto.Id, components);
                 await _productRepository.SaveAsync();
 
