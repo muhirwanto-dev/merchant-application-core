@@ -639,4 +639,7 @@
   <data name="OrderHistoryPage_Lbl_Confirmed" xml:space="preserve">
     <value>Confirmed</value>
   </data>
+  <data name="SignInPage_Msg_SigningIn" xml:space="preserve">
+    <value>Verifying credentials...</value>
+  </data>
 </root>

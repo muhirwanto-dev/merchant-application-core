@@ -1456,6 +1456,15 @@ namespace JualIn.App.Mobile.Presentation.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verifying credentials....
+        /// </summary>
+        internal static string SignInPage_Msg_SigningIn {
+            get {
+                return ResourceManager.GetString("SignInPage_Msg_SigningIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next.
         /// </summary>
         internal static string SignUpPage_Btn_Next {
