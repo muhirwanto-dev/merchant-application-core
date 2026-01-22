@@ -50,7 +50,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
             try
             {
                 using var _1 = StartScopedUserInteraction();
-                await using (var _2 = _loadingService.ShowAsync(3000))
+                await using (var _2 = _loadingService.ShowAsync(3000, AppStrings.SignInPage_Msg_SigningIn))
                 {
                     var response = await _api.SignInAsync(new EmailSignInRequestDto(Email!, Password!, RememberMe: false));
                     if (response.IsSuccessful && response.Content is EmailSignInResponseDto dto)
@@ -61,15 +61,16 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.ViewModels
                         }
                         else
                         {
-                            await _authService.SaveSignInDataAsync(dto.UserIdentifier, dto.AccessToken, dto.RefreshToken, dto.Expiration);
+                            await Task.WhenAll(
+                                _authService.SaveSignInDataAsync(dto.AccessToken, dto.RefreshToken, dto.Expiration),
+                                _authService.FetchUserDataAsync(dto.UserIdentifier).AsTask()
+                                );
                         }
                     }
                     else
                     {
                         await _dialogService.ShowInfoOrThrowAsync(response);
                     }
-
-                    await _authService.FetchUserDataAsync();
                 }
 
                 await _navigation.NavigateToRootAsync<DashboardPage>();

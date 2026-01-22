@@ -8,6 +8,6 @@ namespace JualIn.App.Mobile.Presentation.Modules.Auth.Abstractions
 
         bool HasUserData { get; }
 
-        ValueTask FetchUserDataAsync(CancellationToken cancellationToken = default);
+        ValueTask FetchUserDataAsync(string userIdentity, CancellationToken cancellationToken = default);
     }
 }
