@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace JualIn.App.Mobile.Data
 {
-    public class DbContextFactory : IDesignTimeDbContextFactory<MigratableAppDbContext>
+    public class DbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        public MigratableAppDbContext CreateDbContext(string[] args)
+        public AppDbContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<MigratableAppDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             var options = new SqliteConfigurations
             {
                 DatabaseName = "belibu.db",
@@ -19,7 +19,7 @@ namespace JualIn.App.Mobile.Data
             optionsBuilder.UseSqlite($"Data Source={options.DatabaseName};Password=belibu.app",
                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
 
-            return new MigratableAppDbContext(optionsBuilder.Options);
+            return new AppDbContext(optionsBuilder.Options);
         }
     }
 }
