@@ -97,7 +97,7 @@
                 <horus:MaterialLabel.Text>
                     <MultiBinding StringFormat="{}{0}: {1}">
                         <Binding Source="{Static strings:AppStrings.Product_Lbl_Stock}" />
-                        <Binding Path="Entity.Stock" />
+                        <Binding Path="Entity.Stock.Value" />
                     </MultiBinding>
                 </horus:MaterialLabel.Text>
             </horus:MaterialLabel>

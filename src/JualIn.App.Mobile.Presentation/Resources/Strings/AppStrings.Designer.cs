@@ -1042,6 +1042,15 @@ namespace JualIn.App.Mobile.Presentation.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to eWallet.
+        /// </summary>
+        internal static string PaymentMethod_Lbl_EWallet {
+            get {
+                return ResourceManager.GetString("PaymentMethod_Lbl_EWallet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checkout.
         /// </summary>
         internal static string PointOfSalePage_Btn_Checkout {

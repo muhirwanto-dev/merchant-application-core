@@ -23,8 +23,6 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.Persistence
 
                     await _context.AddAsync(item, cancellationToken);
                 }
-
-                await CommitTransactionAsync(cancellationToken);
             }, cancellationToken);
     }
 }

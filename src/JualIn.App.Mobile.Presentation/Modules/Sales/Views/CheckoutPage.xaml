@@ -60,7 +60,7 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         HorizontalTextAlignment="End"
-                        Text="{Binding CurrentOrder.TotalItemPrice, StringFormat='{}{0:C0}'}" />
+                        Text="{Binding TotalItemPrice, StringFormat='{}{0:C0}'}" />
                     <HorizontalStackLayout
                         Grid.Row="1"
                         Grid.Column="0"
@@ -69,19 +69,19 @@
                             HorizontalOptions="Fill"
                             Text="{Static strings:AppStrings.CheckoutPage_Lbl_Discount}"
                             VerticalOptions="Center" />
-                        <horus:MaterialIconButton
+                        <!--<horus:MaterialIconButton
                             Command="{Binding SetDiscountCommand}"
                             IconTintColor="{AppThemeBinding Light={StaticResource OnSurface},
                                                             Dark={StaticResource DarkOnSurface}}"
                             ImageSource="{FontImageSource FontFamily=MaterialRounded,
                                                           Glyph={x:Static icons:MaterialRounded.Edit}}"
-                            VerticalOptions="Center" />
+                            VerticalOptions="Center" />-->
                     </HorizontalStackLayout>
                     <horus:MaterialLabel
                         Grid.Row="1"
                         Grid.Column="1"
                         HorizontalTextAlignment="End"
-                        Text="{Binding CurrentOrder.TotalDiscount, Mode=OneWay, StringFormat='{}-{0:C0}'}"
+                        Text="{Binding TotalDiscount, Mode=OneWay, StringFormat='{}-{0:C0}'}"
                         VerticalOptions="Center" />
                     <horus:MaterialLabel
                         Grid.Row="2"
@@ -92,7 +92,7 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         HorizontalTextAlignment="End"
-                        Text="{Binding CurrentOrder.TotalTax, StringFormat='{}{0:C0}'}" />
+                        Text="{Binding TotalTax, StringFormat='{}{0:C0}'}" />
                 </Grid>
 
                 <Border
@@ -110,7 +110,7 @@
                         <horus:MaterialLabel
                             FontAttributes="Bold"
                             HorizontalTextAlignment="End"
-                            Text="{Binding CurrentOrder.GrandTotal, StringFormat='{}{0:C0}'}"
+                            Text="{Binding GrandTotal, StringFormat='{}{0:C0}'}"
                             Type="BodyLarge"
                             VerticalOptions="Center" />
                     </FlexLayout>
@@ -219,7 +219,7 @@
                                     Grid.Column="1"
                                     HorizontalOptions="Fill"
                                     HorizontalTextAlignment="End"
-                                    Text="{Binding CurrentOrder.GrandTotal, StringFormat='{0:C0}'}" />
+                                    Text="{Binding GrandTotal, StringFormat='{0:C0}'}" />
 
                                 <horus:MaterialLabel
                                     Grid.Row="1"

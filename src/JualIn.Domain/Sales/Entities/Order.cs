@@ -35,14 +35,6 @@ namespace JualIn.Domain.Sales.Entities
 
         public ICollection<OrderTransaction> Transactions { get; set; } = [];
 
-        public static Order Create(IEnumerable<OrderItem> items)
-        {
-            return new Order
-            {
-                Items = [.. items]
-            };
-        }
-
         /// <summary>
         /// todo: apply discount with voucher Domain
         /// </summary>
@@ -67,29 +59,6 @@ namespace JualIn.Domain.Sales.Entities
             Status = Status.Confirm();
 
             AddDomainEvent(new OrderConfirmedEvent(OrderId, paymentMethod));
-        }
-
-        public void RemoveItem(long productId)
-        {
-            var item = Items.FirstOrDefault(i => i.Product?.Id == productId);
-            if (item != null)
-            {
-                Items.Remove(item);
-            }
-        }
-
-        public void AddItemQuantity(long productId, int quantity)
-        {
-            var item = Items.FirstOrDefault(i => i.Product?.Id == productId);
-            if (item != null)
-            {
-                int newQuantity = quantity + item.Quantity;
-
-                Guard.IsLessThanOrEqualTo(newQuantity, item.Product!.Stock.Value, nameof(quantity));
-                Guard.IsGreaterThanOrEqualTo(newQuantity, 0, nameof(quantity));
-
-                item.Quantity = newQuantity;
-            }
         }
     }
 }

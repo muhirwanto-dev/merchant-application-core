@@ -95,7 +95,7 @@
             <horus:MaterialLabel
                 Grid.Row="2"
                 Grid.Column="1"
-                Text="{Binding Entity.Stock, StringFormat='Available: {0}'}"
+                Text="{Binding Entity.Stock.Value, StringFormat='Available: {0}'}"
                 Type="LabelSmall" />
         </Grid>
     </horus:MaterialCard>

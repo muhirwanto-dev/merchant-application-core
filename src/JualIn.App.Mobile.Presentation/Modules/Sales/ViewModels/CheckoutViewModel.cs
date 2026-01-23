@@ -37,9 +37,21 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         private readonly IDomainEventDispatcher _dispatcher;
         private readonly PaymentFactory _paymentFactory;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(ChangeAmount))]
-        private Order _currentOrder = default!;
+        private readonly Order _model = new();
+
+        public double TotalItemPrice => OrderItems.Sum(i => i.UnitPrice);
+
+        public double TotalDiscount => OrderItems.Sum(i => i.UnitDiscount);
+
+        public double TotalTax => OrderItems.Sum(x => x.UnitTax);
+
+        public double GrandTotal => TotalItemPrice - TotalDiscount + TotalTax;
+
+        public double ChangeAmount => PaidAmount - GrandTotal;
+
+        public ObservableCollection<OrderItemViewModel> OrderItems { get; } = [];
+
+        public IEnumerable<string> PaymentMethods { get; } = [PaymentMethod.Cash];
 
         [ObservableProperty]
         private string _selectedPaymentMethod = PaymentMethod.Cash.Value;
@@ -50,12 +62,6 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(ChangeAmount))]
         private double _paidAmount = 0;
-
-        public double ChangeAmount => PaidAmount - CurrentOrder.GrandTotal;
-
-        public ObservableCollection<SaleProductViewModel> OrderItems { get; } = [];
-
-        public IList<string> PaymentMethods { get; } = [.. PaymentMethod.List.Select(x => x.Value)];
 
         public CheckoutViewModel(
             ILogger<CheckoutViewModel> logger,
@@ -79,6 +85,15 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
             _paymentFactory = paymentFactory;
 
             messenger.RegisterAll(this);
+
+            OrderItems.CollectionChanged += (_, _) =>
+            {
+                OnPropertyChanged(nameof(TotalItemPrice));
+                OnPropertyChanged(nameof(TotalDiscount));
+                OnPropertyChanged(nameof(TotalTax));
+                OnPropertyChanged(nameof(GrandTotal));
+                OnPropertyChanged(nameof(ChangeAmount));
+            };
         }
 
         void INavigationAware.OnNavigatedFrom(IBottomSheetNavigationParameters parameters)
@@ -95,8 +110,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
             if (query.TryGetValue("items", out var items) && items is IEnumerable<SaleProductViewModel> lines)
             {
                 OrderItems.Clear();
-                OrderItems.AddRange(lines);
-                CurrentOrder = Order.Create(OrderItems.Select(_mapper.Map<SaleProductViewModel, OrderItem>));
+                OrderItems.AddRange(lines.Select(_mapper.Map<SaleProductViewModel, OrderItemViewModel>));
             }
         }
 
@@ -144,7 +158,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         }
 
         [RelayCommand]
-        private async Task DeleteItemAsync(SaleProductViewModel item)
+        private async Task DeleteItemAsync(OrderItemViewModel item)
         {
             try
             {
@@ -155,9 +169,6 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
                 }
 
                 OrderItems.Remove(item);
-                CurrentOrder.RemoveItem(item.Entity.Id);
-
-                OnPropertyChanged(nameof(CurrentOrder));
             }
             catch (Exception ex)
             {
@@ -166,19 +177,16 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         }
 
         [RelayCommand]
-        private void DecrementItem(SaleProductViewModel item)
+        private void DecrementItem(OrderItemViewModel item)
         {
             try
             {
-                if (item.OnCartQuantity <= 0)
+                if (item.Quantity <= 0)
                 {
                     return;
                 }
 
-                item.OnCartQuantity--;
-                CurrentOrder.AddItemQuantity(item.Entity.Id, -1);
-
-                OnPropertyChanged(nameof(CurrentOrder));
+                item.Quantity--;
             }
             catch (Exception ex)
             {
@@ -187,49 +195,18 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         }
 
         [RelayCommand]
-        private void IncrementItem(SaleProductViewModel item)
+        private void IncrementItem(OrderItemViewModel item)
         {
             try
             {
-                if (item.OnCartQuantity >= item.Entity.Stock.Value)
+                if (item.Quantity >= item.Product.Stock.Value)
                 {
                     Toast.Make(AppStrings.CheckoutPage_Msg_ItemStockLimit).Show();
 
                     return;
                 }
 
-                item.OnCartQuantity++;
-                CurrentOrder.AddItemQuantity(item.Entity.Id, +1);
-
-                OnPropertyChanged(nameof(CurrentOrder));
-            }
-            catch (Exception ex)
-            {
-                _reporting.ReportProblems(ex);
-            }
-        }
-
-        [RelayCommand]
-        private async Task SetDiscountAsync()
-        {
-            try
-            {
-                var discountStr = await _dialogService.ShowAsync(Dialog.Prompt(
-                    title: AppStrings.CheckoutPage_Lbl_Discount,
-                    message: string.Empty,
-                    initialValue: $"{CurrentOrder.TotalDiscount}"));
-
-                if (string.IsNullOrWhiteSpace(discountStr))
-                {
-                    return;
-                }
-
-                var discount = double.TryParse(discountStr, out var d)
-                    ? d
-                    : 0.0;
-
-                CurrentOrder.ApplyDiscount(discount);
-                OnPropertyChanged(nameof(CurrentOrder));
+                item.Quantity++;
             }
             catch (Exception ex)
             {
@@ -242,7 +219,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         {
             try
             {
-                var hasZeroItems = OrderItems.Any(x => x.OnCartQuantity == 0);
+                var hasZeroItems = OrderItems.Any(x => x.Quantity == 0);
                 if (hasZeroItems)
                 {
                     bool accepted = await _dialogService.ShowAsync(Confirmation.Untitled(AppStrings.CheckoutPage_Msg_ZeroQuantityConfirmation));
@@ -252,11 +229,13 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
                     }
                 }
 
-                await _unitOfWork.CreateOrderAsync(CurrentOrder);
+                _mapper.MapTo(this, _model);
 
-                CurrentOrder.Confirm(PaymentMethod.FromValue(paymentMethodStr));
+                await _unitOfWork.CreateOrderAsync(_model);
 
-                await _dispatcher.DispatchAsync(CurrentOrder.ConsumeEvents());
+                _model.Confirm(PaymentMethod.FromValue(paymentMethodStr));
+
+                await _dispatcher.DispatchAsync(_model.ConsumeEvents());
             }
             catch (Exception ex)
             {
@@ -269,7 +248,7 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
         {
             try
             {
-                var paymentMethod = PaymentMethod.Cash;
+                var paymentMethod = PaymentMethod.FromValue(SelectedPaymentMethod);
                 IPayment payment = _paymentFactory.CreatePayment(paymentMethod);
 
                 _paymentService.SetPayment(payment);
@@ -284,9 +263,9 @@ namespace JualIn.App.Mobile.Presentation.Modules.Sales.ViewModels
                     return;
                 }
 
-                CurrentOrder.Pay(PaidAmount, paymentMethod);
+                _model.Pay(PaidAmount, paymentMethod);
 
-                await _dispatcher.DispatchAsync(CurrentOrder.ConsumeEvents());
+                await _dispatcher.DispatchAsync(_model.ConsumeEvents());
                 await _navigation.BackAsync(ShellNavigationParams.Create(("refresh", true)));
             }
             catch (Exception ex)

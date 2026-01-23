@@ -13,10 +13,8 @@ namespace JualIn.App.Mobile.Presentation
             AppDomain.CurrentDomain.UnhandledException += AppDomain_UnhandledException;
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
-        {
-            return new Window(new AppShell());
-        }
+        protected override Window CreateWindow(IActivationState? activationState) 
+            => new(new AppShell());
 
         private void AppDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

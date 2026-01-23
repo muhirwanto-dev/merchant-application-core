@@ -642,4 +642,7 @@
   <data name="SignInPage_Msg_SigningIn" xml:space="preserve">
     <value>Verifying credentials...</value>
   </data>
+  <data name="PaymentMethod_Lbl_EWallet" xml:space="preserve">
+    <value>eWallet</value>
+  </data>
 </root>
