@@ -31,6 +31,8 @@ using SingleScope.Persistence.EFCore;
 using JualIn.App.Mobile.Core.Persistence.Contexts;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using CommunityToolkit.Mvvm.Messaging;
+
 
 #if USE_OFFLINE_MODE
 using JualIn.App.Mobile.Core.Infrastructure.Api.Mock;
@@ -106,8 +108,7 @@ namespace JualIn.App.Mobile.Core
                 .AddScopedRepository<IInventoryRepository, InventoryRepository, Inventory>()
                 .AddScopedRepository<IStockMovementRepository, StockMovementRepository, StockMovement>()
                 .AddScopedRepository<IOrderRepository, OrderRepository, Order>()
-                .AddScopedRepository<IOrderTransactionRepository, OrderTransactionRepository, OrderTransaction>()
-                    ;
+                .AddScopedRepository<IOrderTransactionRepository, OrderTransactionRepository, OrderTransaction>();
             }
 
             private IServiceCollection AddBackendApi(IConfiguration configuration)
@@ -175,7 +176,8 @@ namespace JualIn.App.Mobile.Core
                 // Sales
                 .AddTransient<OrderTransactionFactory>()
                 // Messaging
-                .AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+                .AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>()
+                .AddSingleton<IMessenger>(WeakReferenceMessenger.Default);
             }
         }
     }

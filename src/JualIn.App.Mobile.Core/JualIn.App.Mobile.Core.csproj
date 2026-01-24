@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Mediator.Abstractions" Version="3.0.*" />
     <PackageReference Include="Mediator.SourceGenerator" Version="3.0.*">
       <PrivateAssets>all</PrivateAssets>

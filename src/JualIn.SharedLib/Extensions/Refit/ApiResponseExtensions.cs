@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using CommunityToolkit.Diagnostics;
 using Refit;
 using SingleScope.Extensions.Json;
 
@@ -57,6 +58,12 @@ namespace JualIn.SharedLib.Extensions.Refit
 
                 return message;
             }
+
+            public string GetMessageOrDefault(string fallback = "Unknown Api Error")
+                => response.GetMessage() ?? fallback;
+
+            public string GetMessageOrThrow()
+                => response.GetMessage() ?? throw response.Error ?? ThrowHelper.ThrowInvalidOperationException<ApiException>();
         }
     }
 }
