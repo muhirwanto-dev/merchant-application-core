@@ -1,18 +1,43 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
-    <!--<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>-->
-
-    <AssemblyVersion>1.0.0.0123</AssemblyVersion>
-		<FileVersion>1.0.0.0123</FileVersion>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyVersion>1.0.0.0124</AssemblyVersion>
+		<FileVersion>1.0.0.0124</FileVersion>
 	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net10.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants);USE_OFFLINE_MODE;USE_VERSION_0</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net10.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants);USE_OFFLINE_MODE;USE_VERSION_0</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mediator.Abstractions" Version="3.0.*" />
+    <PackageReference Include="Mediator.SourceGenerator" Version="3.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.1" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
+    <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="SingleScope.Persistence.EFCore" Version="4.0.3" />
+    <PackageReference Include="SingleScope.Reporting" Version="1.0.2" />
+  </ItemGroup>
   
   <ItemGroup>
-	  <ProjectReference Include="..\..\..\singlescope-plugins\source\SingleScope.Maui\SingleScope.Maui.csproj" />
-	  <ProjectReference Include="..\..\..\singlescope-plugins\source\SingleScope.Navigations.Maui\SingleScope.Navigations.Maui.csproj" />
-	  <ProjectReference Include="..\JualIn.App.Mobile.Data\JualIn.App.Mobile.Data.csproj" />
 	  <ProjectReference Include="..\JualIn.Contracts\JualIn.Contracts.csproj" />
+	  <ProjectReference Include="..\JualIn.Domain\JualIn.Domain.csproj" />
 	  <ProjectReference Include="..\JualIn.SharedLib\JualIn.SharedLib.csproj" />
 	</ItemGroup>
 
