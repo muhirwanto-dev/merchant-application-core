@@ -5,5 +5,7 @@
         public bool UseEmulator { get; set; }
 
         public string DatabasePathPrefix { get; set; } = string.Empty;
+
+        public string? MigrationAssemblyName { get; set; }
     }
 }

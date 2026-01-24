@@ -40,5 +40,9 @@
 	  <ProjectReference Include="..\JualIn.Domain\JualIn.Domain.csproj" />
 	  <ProjectReference Include="..\JualIn.SharedLib\JualIn.SharedLib.csproj" />
 	</ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Modules\Inventories\Queries\" />
+  </ItemGroup>
 
 </Project>

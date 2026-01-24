@@ -92,7 +92,11 @@ namespace JualIn.App.Mobile.Core
                         }
 
                         builder.UseSqlite(conn,
-                            o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+                            o =>
+                            {
+                                o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                                o.MigrationsAssembly(config.MigrationAssemblyName);
+                            });
                     })
 
                 .AddScoped<IOrderUnitOfWork, OrderUnitOfWork>()
