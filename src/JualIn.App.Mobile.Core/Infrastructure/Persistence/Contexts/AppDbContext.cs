@@ -1,6 +1,7 @@
 ﻿using JualIn.Domain.Account.Entities;
 using JualIn.Domain.Account.ValueObjects;
 using JualIn.Domain.Catalogs.Entities;
+using JualIn.Domain.Common.Entities;
 using JualIn.Domain.Common.ValueObjects;
 using JualIn.Domain.Inventories.Entities;
 using JualIn.Domain.Inventories.ValueObjects;
@@ -125,6 +126,41 @@ namespace JualIn.App.Mobile.Core.Persistence.Contexts
                     toDb => toDb.Value,
                     fromDb => new Stock<int>(fromDb)
                 );
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            UpdateEntityTimestamp();
+
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        {
+            UpdateEntityTimestamp();
+
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void UpdateEntityTimestamp()
+        {
+            var now = DateTime.UtcNow;
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is AuditableEntity 
+                    && (e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                var auditable = (entityEntry.Entity as AuditableEntity)!;
+                
+                auditable.UpdatedAt = now;
+
+                if (entityEntry.State == EntityState.Added)
+                {
+                    auditable.CreatedAt = now;
+                }
+            }
         }
     }
 }
