@@ -2,5 +2,5 @@
 
 namespace JualIn.App.Mobile.Core.Modules.Auth.Messages
 {
-    public record SignInResponseMessage(bool IsConfirmed) : IUIMessage;
+    public record EmailAvailabilityMessage(bool IsAvailable, string? Message) : IUIMessage;
 }
