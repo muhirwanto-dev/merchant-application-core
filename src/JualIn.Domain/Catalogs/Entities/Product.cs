@@ -37,7 +37,6 @@ namespace JualIn.Domain.Catalogs.Entities
             Guard.IsTrue(Id == item.Product?.Id, nameof(Id));
 
             Stock.Decrease(item.Quantity);
-            UpdatedAt = DateTime.UtcNow;
 
             if (Stock == 0)
             {

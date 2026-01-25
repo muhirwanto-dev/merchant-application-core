@@ -147,13 +147,13 @@ namespace JualIn.App.Mobile.Core.Persistence.Contexts
             var now = DateTime.UtcNow;
             var entries = ChangeTracker
                 .Entries()
-                .Where(e => e.Entity is AuditableEntity 
+                .Where(e => e.Entity is AuditableEntity
                     && (e.State == EntityState.Added || e.State == EntityState.Modified));
 
             foreach (var entityEntry in entries)
             {
                 var auditable = (entityEntry.Entity as AuditableEntity)!;
-                
+
                 auditable.UpdatedAt = now;
 
                 if (entityEntry.State == EntityState.Added)

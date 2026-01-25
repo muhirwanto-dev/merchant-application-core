@@ -33,7 +33,6 @@ namespace JualIn.App.Mobile.Core.Modules.Inventories.Persistence
                 DetatchFromTracking(existing);
 
                 entity.CreatedAt = existing.CreatedAt;
-                entity.UpdatedAt = DateTime.UtcNow;
 
                 await UpdateAsync(entity, cancellationToken);
             }

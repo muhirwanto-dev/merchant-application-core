@@ -66,7 +66,6 @@ namespace JualIn.Domain.Inventories.Entities
                 _ => throw new InvalidOperationException()
             });
             LastStockUpdate = now;
-            UpdatedAt = now;
 
             if (Stock.IsOutOfStock())
             {
