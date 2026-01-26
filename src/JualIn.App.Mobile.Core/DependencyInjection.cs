@@ -32,6 +32,8 @@ using JualIn.App.Mobile.Core.Persistence.Contexts;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using CommunityToolkit.Mvvm.Messaging;
+using JualIn.App.Mobile.Core.Infrastructure.Behaviors;
+
 
 
 #if USE_OFFLINE_MODE
@@ -54,7 +56,11 @@ namespace JualIn.App.Mobile.Core
                     .AddLogging(configuration)
                     .AddDatabase(configuration)
                     .AddServices()
-                    .AddMediator();
+                    .AddMediator(options =>
+                    {
+                        options.Assemblies = [typeof(DependencyInjection)];
+                        options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
+                    });
             }
 
             private IServiceCollection AddLogging(IConfiguration configuration)
