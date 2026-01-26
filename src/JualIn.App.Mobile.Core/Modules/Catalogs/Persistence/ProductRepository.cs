@@ -22,6 +22,11 @@ namespace JualIn.App.Mobile.Core.Modules.Catalogs.Persistence
                 .ThenInclude(c => c.Inventory)
                 .ToListAsync(cancellationToken);
 
+        public Task<string[]> GetSuggestionsAsync(CancellationToken cancellationToken = default)
+            => _set.AsNoTracking()
+                .Select(x => x.Name)
+                .ToArrayAsync(cancellationToken);
+
         public Task<List<Product>> SearchAsync(string query, CancellationToken cancellationToken = default)
             => string.IsNullOrEmpty(query)
                 ? GetAllAsync(cancellationToken)

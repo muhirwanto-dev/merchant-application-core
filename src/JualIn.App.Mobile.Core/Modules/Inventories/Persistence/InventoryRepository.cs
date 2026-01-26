@@ -16,6 +16,11 @@ namespace JualIn.App.Mobile.Core.Modules.Inventories.Persistence
                 .Distinct()
                 .ToArrayAsync(cancellationToken);
 
+        public Task<string[]> GetSuggestionsAsync(CancellationToken cancellationToken = default)
+            => _set.AsNoTracking()
+                .Select(x => x.Name)
+                .ToArrayAsync(cancellationToken);
+
         public Task<List<Inventory>> SearchAsync(string query, CancellationToken cancellationToken = default)
             => string.IsNullOrEmpty(query)
                 ? GetAllAsync(cancellationToken)
